@@ -1,0 +1,39 @@
+#brandId {
+    margin-right: 8.5rem;
+    padding-top: .2rem;
+    font-size: 1em;
+    color: green;
+    font-weight: bold;
+    margin-bottom: .4em;
+    font-style: oblique;
+    font-family: fantasy;
+    box-shadow: 8px 8px 3px #0eb925;
+}
+
+.btn-menu {
+    margin-right: 2rem;
+}
+
+.div-space {
+    margin-top: 0.25rem;
+}
+
+.top-right {
+    margin-right: 10px;
+    margin-top: 10px;
+    top: 20px;
+}
+
+.main.container {
+    margin-top: 2em;
+}
+
+.ui.footer.segment {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.ui.center.aligned.container {
+    padding-top: 12em;
+}

@@ -1,4 +1,52 @@
-<div id="dialog" title="Basic dialog">
-    <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+<div class="ui fixed inverted menu" *ngIf="true">
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+              </button>
+        <label class="navbar-brand ui ribbon label" id="brandId">LaRManS 2018</label>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <div class="div-space" routerLinkActive="active current">
+                    <button class="small ui button btn-menu" routerLink="">
+                        <i class="home icon"></i>
+                        Home
+                      </button>
+                </div>
+                <div class="div-space" routerLinkActive="active current">
+                    <button class="small ui dropdown button btn-menu" routerLink="/application">
+                        <i class="block layout icon"></i>
+                        Application
+                  </button>
+                </div>
+
+
+            </ul>
+
+            <div routerLinkActive="active current">
+                <button class="mini ui primary button my-2 my-lg-0 top-right" routerLink="/login">
+                    <i class="user icon"></i>
+                    Login
+              </button>
+            </div>
+
+            <div routerLinkActive="active current">
+                <button class="mini ui primary button my-2 my-lg-0 top-right" routerLink="/signUp">
+                    <i class="sign in icon"></i>
+                    Sing Up
+                </button>
+            </div>
+
+        </div>
+
+    </nav>
 </div>
+
+<div class="ui inverted vertical footer segment">
+    <div class="ui center aligned container">
+        &copy;&nbsp; Copyright 2018 &nbsp;|&nbsp;&nbsp; PARAGON GEOMATICS SOLUTIONS LTD &nbsp;&nbsp;|&nbsp;&nbsp; All Rights Reserved.
+    </div>
+</div>
+<router-outlet></router-outlet>
+
 <router-outlet></router-outlet>
