@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppDataModelService } from '../app-data-model.service';
 
 @Component({
   selector: 'app-esri-map',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EsriMapComponent implements OnInit {
 
-  constructor() { }
+  isEsriMapOpens:boolean;
+
+  constructor(private _isEsriMapOpen:AppDataModelService) { }
 
   ngOnInit() {
+    this._isEsriMapOpen.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
   }
 
 }

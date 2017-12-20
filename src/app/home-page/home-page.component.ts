@@ -16,6 +16,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit() {
     this._isEsriMapOpen.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
+    
   }
 
 }
