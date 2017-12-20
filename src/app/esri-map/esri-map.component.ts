@@ -30,25 +30,43 @@ export class EsriMapComponent implements OnInit {
   
     // first, we use Dojo's loader to require the map class
     esriLoader.loadModules([
-      "esri/Map",
-      "esri/views/MapView",
+      'esri/Map',
+      'esri/views/MapView',
+      "esri/layers/TileLayer",
+      "esri/layers/Layer",
+      "esri/core/Collection",
+      "esri/geometry/Point",
+      "esri/portal/PortalItem",
       "esri/layers/FeatureLayer",
-      "esri/layers/GraphicsLayer",
-      "esri/geometry/geometryEngine",
+      "esri/geometry/Extent",
+      "esri/geometry/SpatialReference",
+      "esri/geometry/Polygon",
       "esri/Graphic",
+      "esri/geometry/support/webMercatorUtils",
 
-      "dojo/on",
       "dojo/dom",
-      "dojo/dom-construct",
+      "dojo/promise/all",
+      "dojo/on",
       "dojo/domReady!"
     ],options)
     .then(([
-      Map, MapView,
+      Map,
+      MapView,
+      TileLayer,
+      Layer,
+      Collection,
+      Point,
+      PortalItem,
       FeatureLayer,
-      GraphicsLayer,
-      geometryEngine,
+      Extent,
+      SpatialReference,
+      Polygon,
       Graphic,
-      on, dom, domConstruct
+      webMercatorUtils,
+
+      dom,
+      all,
+      on
     ]) => {
       
       var map = new Map({
