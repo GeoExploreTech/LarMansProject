@@ -6,9 +6,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   
   isEsriMapOpens:boolean;
+
   constructor(private _isEsriMapOpen:AppDataModelService){
 
   }
@@ -16,6 +17,10 @@ export class AppComponent {
   ngOnInit(){
     this._isEsriMapOpen.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
     console.log(this.isEsriMapOpens);
+  }
+
+  openEsriMap(){
+    this.isEsriMapOpens = true;
   }
 
 }

@@ -1,3 +1,114 @@
-<p>
-  esri-map works!
-</p>
+<div class="ui fixed inverted menu">
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbars4Application" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+              </button>
+        <label class="navbar-brand ui ribbon label" id="brandId">LaRManS 2018</label>
+
+        <div class="collapse navbar-collapse" id="navbars4Application">
+
+            <ul class="navbar-nav mr-auto">
+
+                <div class="div-space ">
+                    <div routerLinkActive="active current">
+                        <button class="small ui button " id="btn_WorkingLayId" (click)="openLayersDialog()">
+                                      <i class="block layout icon"></i>
+                                       Land Information
+                                    </button>
+                    </div>
+                </div>
+
+                <div class="div-space ">
+
+                    <div routerLinkActive="active current">
+                        <button class="small ui button ">
+                                  <i class="sign in icon"></i>
+                                  Illegal Extension
+                              </button>
+                    </div>
+                </div>
+
+                <div class="div-space ">
+
+                    <div routerLinkActive="active current">
+                        <button class="small ui button ">
+                          <i class="sign in icon"></i>
+                              Record Updating
+                          </button>
+                    </div>
+                </div>
+
+            </ul>
+
+
+
+
+
+            <div routerLinkActive="active current">
+                <button class="mini ui primary button my-2 my-lg-0 top-right" (click)="sendMeHome()">
+                      <i class="home icon"></i>
+                    Back Home
+                </button>
+            </div>
+
+            <div routerLinkActive="active current">
+                <button class="mini ui primary button my-2 my-lg-0 top-right">
+                          <i class="home icon"></i>
+                        Log Out
+                    </button>
+            </div>
+
+        </div>
+
+    </nav>
+</div>
+
+<!-- DIV FOR MAP CONTENT HERE -->
+<div class="ui main container">
+    <div id="mapId"></div>
+
+
+    <!-- SIDEBAR DIALOG TEMPLATE -->
+
+    <div class="sidebar" id="sidebar_wkLayId">
+
+        <div class="ui inverted segment">
+            <div class="contaner-fluid">
+                <div class="logo">
+                    <div class="ui header large">
+                        <label class="ui blue ribbon image label">
+                      <img src="../assets/logo.png"> LarManS v2018 (APP)
+                      </label>
+                    </div>
+                </div>
+            </div>
+            <div class="ui inverted divider"></div>
+        </div>
+
+        <div class="ui container">
+            <button class="ui primary button " id="load-EstateLayer" (click)="openLayersDialog()">
+                      Estate Layers
+              </button>
+        </div>
+        <div class="ui inverted divider"></div>
+        <div class="ui container">
+            <button class="ui primary button " id="acquisiton_btn">
+                          Acquisition
+          </button>
+        </div>
+        <div class="ui inverted divider"></div>
+
+
+    </div>
+
+    <!-- WIDGET FOR FEATURE LAYER DISPLAY -->
+    <div class="sidebar radioLeft">
+        <div class="radioLeft" id="infoDiv">
+
+
+        </div>
+
+    </div>
+
+
+</div>

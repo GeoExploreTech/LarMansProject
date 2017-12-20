@@ -26,6 +26,7 @@
     "esri-loader": "^1.5.3",
     "jquery": "^3.2.1",
     "jquery-ui-dist": "^1.12.1",
+    "proj4": "^2.4.4",
     "rxjs": "^5.5.2",
     "semantic-ui-css": "^2.2.12",
     "tether": "^1.4.3",

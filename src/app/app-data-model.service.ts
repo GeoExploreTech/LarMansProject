@@ -4,7 +4,7 @@ import {BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class AppDataModelService {
 
-  private isEsriMapOpens = new BehaviorSubject<boolean>(false);
+  private isEsriMapOpens = new BehaviorSubject<boolean>(true);
   isEsriMapOpen = this.isEsriMapOpens.asObservable();
   constructor() { }
 

@@ -28,7 +28,8 @@
             "../node_modules/tether/dist/js/tether.min.js",
             "../node_modules/bootstrap/dist/js/bootstrap.min.js",
             "../node_modules/jquery-ui-dist/jquery-ui.min.js",
-            "../node_modules/semantic-ui-css/semantic.js"
+            "../node_modules/semantic-ui-css/semantic.js",
+            "../node_modules/proj4/dist/proj4.js"
         ],
         "environmentSource": "environments/environment.ts",
         "environments": {

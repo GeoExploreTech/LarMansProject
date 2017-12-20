@@ -1,0 +1,59 @@
+/* import the required JSAPI css */
+
+@import 'https://js.arcgis.com/4.6/esri/css/main.css';
+.esri-view {
+    margin-top: 1rem;
+    width: 100%;
+    height: 86vh;
+}
+
+.ui.main.container {
+    /* margin-top: 10rem; */
+    padding-top: .5rem;
+    background: white;
+    width: 100%;
+    height: 95vh;
+    /* padding-left: 100px; */
+}
+
+ui divider {
+    background-color: #2E8B57;
+}
+
+.logo {
+    background-color: #2E8B57;
+}
+
+.sidebar {
+    display: none;
+    position: relative;
+}
+
+#brandId {
+    margin-right: 8.5rem;
+    padding-top: .2rem;
+    font-size: 1em;
+    color: green;
+    font-weight: bold;
+    margin-bottom: .4em;
+    font-style: oblique;
+    font-family: fantasy;
+    box-shadow: 8px 8px 3px #0eb925;
+}
+
+.small.ui.button {
+    margin-left: 1rem;
+    width: 12rem;
+}
+
+.mini.ui.primary.button {
+    margin-left: 1rem;
+}
+
+.div-space {
+    margin-top: 0.25rem;
+}
+
+#mapId {
+    margin-top: 3.5rem;
+}
