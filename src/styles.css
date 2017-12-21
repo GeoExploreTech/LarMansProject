@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import 'https://js.arcgis.com/4.6/esri/css/main.css';
+.esri-view {
+    margin-top: 1rem;
+    width: 100%;
+    height: 86vh;
+}

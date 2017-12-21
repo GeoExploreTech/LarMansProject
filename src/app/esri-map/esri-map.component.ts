@@ -14,15 +14,50 @@ declare let $:any;
 })
 export class EsriMapComponent implements OnInit {
 
+
+
+    /**
+   * DECLARING ESRI MODULES HERE
+   */
+  private map:any;
+  private view: any;
+  public Layer:any;
+  public Collection:any;
+  public Point:any;
+  public PortalItem:any;
+  public FeatureLayer:any;
+  public Extent:any;
+  public SpatialReference:any;
+  public Polygon:any;
+  public Graphic:any;
+
+  public dom:any;
+  public all:any;
+  public on:any;
+
+  private ESTATE:any;
+  private PLOTS:any;
+  private ENCROACHMENT:any;
+  private BLOCKS:any;
+  private ROAD_NETWORK:any;
+  
+
+  private resultsEstateLyr:any;
+  private qTask4EstateLay :any;
+
+  private query_params:any;
+
   isEsriMapOpens:boolean;
 
   constructor(
-    private _isEsriMapOpen:AppDataModelService,
+    private _esriMapModule:AppDataModelService,
     private router:Router
-  ) { }
+  ) {
+   
+   }
 
   ngOnInit() {
-    this._isEsriMapOpen.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
+    this._esriMapModule.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
 
     const options = {
       url: 'https://js.arcgis.com/4.6/'
@@ -32,7 +67,6 @@ export class EsriMapComponent implements OnInit {
     esriLoader.loadModules([
       'esri/Map',
       'esri/views/MapView',
-      "esri/layers/TileLayer",
       "esri/layers/Layer",
       "esri/core/Collection",
       "esri/geometry/Point",
@@ -42,8 +76,11 @@ export class EsriMapComponent implements OnInit {
       "esri/geometry/SpatialReference",
       "esri/geometry/Polygon",
       "esri/Graphic",
-      "esri/geometry/support/webMercatorUtils",
+      "esri/tasks/QueryTask",
+      "esri/tasks/support/Query",
+      "esri/layers/GraphicsLayer",
 
+      "dojo/_base/array",
       "dojo/dom",
       "dojo/promise/all",
       "dojo/on",
@@ -52,7 +89,6 @@ export class EsriMapComponent implements OnInit {
     .then(([
       Map,
       MapView,
-      TileLayer,
       Layer,
       Collection,
       Point,
@@ -62,31 +98,104 @@ export class EsriMapComponent implements OnInit {
       SpatialReference,
       Polygon,
       Graphic,
-      webMercatorUtils,
+      QueryTask,
+      Query,
+      GraphicsLayer,
 
+      arrayUtils,
       dom,
       all,
       on
     ]) => {
+
       
-      var map = new Map({
-        basemap: "streets"
+      this.dom = dom;
+      this.all = all;
+      this.on = on;
+
+      // Create graphics layer and symbol to use for displaying the results from esate layer query
+      this.resultsEstateLyr = new GraphicsLayer();
+
+
+      // URL to feature service containing points representing the 50
+      // most prominent peaks in the U.S.
+      const estateUrl ="https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LAND_RECORD_MANAGEMENT_SYS/FeatureServer/4";
+
+      this.ESTATE = new FeatureLayer({
+        url: estateUrl,
+        outFields: ["*"],
+        visible: false
       });
 
-      var view = new MapView({
+
+
+       /*****************************************************************
+       *  Point QueryTask to URL of feature service
+       *****************************************************************/
+      this.qTask4EstateLay = new QueryTask({
+        url: estateUrl
+      });
+
+      /******************************************************************
+       * Set the query parameters to always return geometry and all fields.
+       * Returning geometry allows us to display results on the map/view
+       ******************************************************************/
+      this.query_params = new Query({
+        returnGeometry: true,
+        outFields: ["*"]
+      });
+
+
+      /*****************************************************************
+       * Layers may be added to the map in the map's constructor
+       *****************************************************************/
+      this.map = new Map({
+        basemap: "satellite",
+        layers: [this.resultsEstateLyr,this.ESTATE]
+      });
+
+
+      /*****************************************************************
+       * Or they may be added to the map using map.add()
+       *****************************************************************/
+      //map.add(transportationLyr);
+
+      this.view = new MapView({
         container: "mapId",
-        map: map,
-        zoom: 4,
-        center: [15, 65] // longitude, latitude
+        map: this.map
       });
 
+      this.view.when(()=>{
+        const query = this.ESTATE.createQuery();
+        const estateRes = this.ESTATE.queryFeatures(query);
+        estateRes.then(res=>{
+          const estateName = this.getValues(res);
+          console.log(estateName);
+        });
+        // const estateName = this.getValues(estateRes,'NAME');
+      })
 
-    })
-    .catch(err => {
+
+      // this.view.when(function() {
+      //   return this.ESTATE.then(function() {
+      //     const query = this.ESTATE.createQuery();
+      //     return this.ESTATE.queryFeatures(query);
+      //   });
+      // }).then((res)=>{
+      //   console.log(res);
+      // })
+
+
+
+    }).catch(err => {
       // handle any errors
       console.error(err);
     });
+    
   }
+
+
+
 
 
   openLayersDialog(){
@@ -110,6 +219,136 @@ export class EsriMapComponent implements OnInit {
 
   sendMeHome(){
     this.router.navigate(['']);
+    // this.doQuery();
+  }
+
+  /**
+   * Method for Executing Query for Estate Feature Layer
+   */
+  private doQuery() {
+    // Clear the results from a previous query
+    this.resultsEstateLyr.removeAll();
+    /*********************************************
+     *
+     * Set the where clause for the query. This can be any valid SQL expression.
+     * In this case the inputs from the three drop down menus are used to build
+     * the query. For example, if "Elevation", "is greater than", and "10,000 ft"
+     * are selected, then the following SQL where clause is built here:
+     *
+     * params.where = "ELEV_ft > 10000";
+     *
+     * ELEV_ft is the field name for Elevation and is assigned to the value of the
+     * select option in the HTML below. Other operators such as AND, OR, LIKE, etc
+     * may also be used here.
+     *
+     **********************************************/
+    //params.where = attributeName.value + expressionSign.value + value.value;
+    // console.log(this.query_params);
+
+    // executes the query and calls getResults() once the promise is resolved
+    // promiseRejected() is called if the promise is rejected
+
+  }
+
+
+/**
+ *  Method for getting unique value from a set of VALUE
+ * @param values 
+ */
+  private getUniqueValues(values) {
+    var uniqueValues = [];
+
+    values.forEach(function(item) {
+      if ((uniqueValues.length < 1 || uniqueValues.indexOf(item) ===
+          -1) &&
+        (item !== "")) {
+          console.log(item);
+          uniqueValues.push(item);
+      }
+
+    });
+    return uniqueValues;
+  }
+
+
+/**
+ * Method to get all the Value in a particular
+ * Field.
+ * @param response 
+ */
+  private getValues(response) {
+    const features = response.features;
+    const values = features.map(function(feature) {
+      return feature.attributes.NAME;
+    });
+    //console.log(values);
+    return values;
+  }
+
+  private createSideMenu(sidebar,title_tag) {
+    $('#mapId').css({
+      "background-color": "black",
+      "padding": "2px",
+      "margin-top": "2.5em",
+      "width": "100vw",
+      "height": "90vh",
+      "position": "fixed",
+      "left": "14.2vw",
+      "border":" 0.2em solid #eee",
+      "box-shadow": ".1em .1em .3em #eee", /* CSS3 ROUNDED CORNERS */
+      "-moz-border-radius": "5px",
+      "-webkit-border-radius": "5px",
+      "-khtml-border-radius": "5px",
+      "border-radius": "5px"
+    });
+    $('#mapId').width($('body').width()-185);
+    $(sidebar).css({
+      // "top": "54px",
+      // "bottom": "0",
+      // "left": "0",
+      "z-index": 1200,
+      "position": "relative",
+      "padding": "1px",
+      "overflow-x": "hidden",
+      "overflow-y": "auto", /* Scrollable contents if viewport is shorter than content. */
+      "border-right": ".4em solid #eee",
+      "width": "20vw",
+      "height": "100vh"
+    });
+    let icons = {
+    header: "ui-icon-circle-arrow-e",
+    activeHeader: "ui-icon-circle-arrow-s"
+    };
+    $( sidebar ).dialog({
+      title: title_tag,
+      width: "224.5px",
+      draggable: false,
+      position: {
+         my: 'left top+32',
+         at: 'left top+30',
+         of: "body"
+      },
+      collision: "fit flip",
+      resize: function( event, ui ) {
+        $('#mapId').css({
+          "left": ui.size.width,
+          "width": "100vw"
+        });
+      },
+      beforeClose: function( event, ui ) {
+      
+        $('#mapId').css({
+          "left": 0,
+          "width": "100vw"
+        });
+      }
+    }).accordion({
+      icons: icons,
+      collapsible: true,
+      heightStyle: "content"
+    });
+
+
   }
 
 

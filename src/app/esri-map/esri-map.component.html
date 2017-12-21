@@ -11,7 +11,7 @@
 
                 <div class="div-space ">
                     <div routerLinkActive="active current">
-                        <button class="small ui button " id="btn_WorkingLayId" (click)="openLayersDialog()">
+                        <button class="small ui button " id="btn_WorkingLayId" (click)="createSideMenu('#sidebar_wkLayId','Land Information')">
                                       <i class="block layout icon"></i>
                                        Land Information
                                     </button>
@@ -85,18 +85,22 @@
             <div class="ui inverted divider"></div>
         </div>
 
-        <div class="ui container">
-            <button class="ui primary button " id="load-EstateLayer" (click)="openLayersDialog()">
-                      Estate Layers
+        <div class="ui container element">
+
+            <div class="ui inverted divider"></div>
+            <div class="ui container">
+                <button class="ui primary button " id="load-EstateLayer" (click)="openLayersDialog()">
+                          Estate Layers
+                  </button>
+            </div>
+            <div class="ui inverted divider"></div>
+            <div class="ui container">
+                <button class="ui primary button " id="acquisiton_btn">
+                              Acquisition
               </button>
+            </div>
+            <div class="ui inverted divider"></div>
         </div>
-        <div class="ui inverted divider"></div>
-        <div class="ui container">
-            <button class="ui primary button " id="acquisiton_btn">
-                          Acquisition
-          </button>
-        </div>
-        <div class="ui inverted divider"></div>
 
 
     </div>
