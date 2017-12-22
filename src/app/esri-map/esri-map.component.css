@@ -59,3 +59,23 @@ ui divider {
 .ui.container.element {
     margin-top: 10em;
 }
+
+#infoDiv {
+    background-color: #DCDCDC;
+}
+
+.radioLeft {
+    text-align: left;
+    height: 10vh;
+    /*display: block;*/
+}
+
+.ui.radio.checkbox {
+    margin-top: 1em;
+    border-radius: 10rem;
+    z-index: 500;
+    opacity: 0.95;
+    padding: 2px;
+    width: 20px;
+    border-color: #0eb925;
+}

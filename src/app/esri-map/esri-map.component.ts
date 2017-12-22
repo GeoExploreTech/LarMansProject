@@ -44,6 +44,10 @@ export class EsriMapComponent implements OnInit {
 
   private resultsEstateLyr:any;
   private qTask4EstateLay :any;
+  private infoDiv:any;
+  private infoDivSelect:any;
+
+  private estateLayName:any;
 
   private query_params:any;
 
@@ -58,7 +62,10 @@ export class EsriMapComponent implements OnInit {
 
   ngOnInit() {
     this._esriMapModule.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
-
+    $('.ui.floating.dropdown')
+      .dropdown()
+    ;
+    
     const options = {
       url: 'https://js.arcgis.com/4.6/'
     };
@@ -113,6 +120,10 @@ export class EsriMapComponent implements OnInit {
       this.all = all;
       this.on = on;
 
+      this.infoDiv = document.getElementById('infoDiv');
+      this.infoDivSelect = document.getElementById('infoDivSelect');
+      
+      
       // Create graphics layer and symbol to use for displaying the results from esate layer query
       this.resultsEstateLyr = new GraphicsLayer();
 
@@ -170,20 +181,14 @@ export class EsriMapComponent implements OnInit {
         const estateRes = this.ESTATE.queryFeatures(query);
         estateRes.then(res=>{
           const estateName = this.getValues(res);
-          console.log(estateName);
+          this.estateLayName = this.getUniqueValues(estateName);
+          this.generateLayerButton(this.estateLayName);
         });
-        // const estateName = this.getValues(estateRes,'NAME');
+       
       })
 
 
-      // this.view.when(function() {
-      //   return this.ESTATE.then(function() {
-      //     const query = this.ESTATE.createQuery();
-      //     return this.ESTATE.queryFeatures(query);
-      //   });
-      // }).then((res)=>{
-      //   console.log(res);
-      // })
+
 
 
 
@@ -194,7 +199,44 @@ export class EsriMapComponent implements OnInit {
     
   }
 
+/**
+ * Template for displaying Layers in the Map
+ * @param id 
+ */
+  private template (id){
+    let tem =  `
+                <button class="item ui button" 
+                style="
+                margin-top: .3em;
+                border-radius: 2.5rem;
+                z-index: 500;
 
+                "
+                value="${id}"
+                >${id}</button>
+                `;
+
+    return tem;
+  }
+
+  generateLayerButton(values){
+    let docFrag = document.createDocumentFragment();
+    values.forEach(res=>{
+      const card = this.template(res);
+      const elem = document.createElement("div");
+      elem.innerHTML = card;
+      this.on(elem, "click", ({target})=>{
+        // console.log(target.value);
+        this.doFieldQuery("NAME",target.value,this.resultsEstateLyr);
+
+      });
+      docFrag.appendChild(elem);
+
+    });
+    // Append the completed list to the page.
+    this.infoDivSelect.appendChild(docFrag);
+    docFrag = undefined;
+  }
 
 
 
@@ -205,7 +247,8 @@ export class EsriMapComponent implements OnInit {
       modal: false,
       icon: "ui-icon-close",
       resizable: false,
-      width: 260,
+      width: 280,
+      height: 400,
       position: {
           my: 'left top+50',
           at: 'left top+50',
@@ -213,7 +256,6 @@ export class EsriMapComponent implements OnInit {
       },
       collision: "fit flip"
     });
-    $( ".widget-element" ).checkboxradio();
     $("#infoDiv").dialog("open");
   }
 
@@ -222,12 +264,15 @@ export class EsriMapComponent implements OnInit {
     // this.doQuery();
   }
 
-  /**
-   * Method for Executing Query for Estate Feature Layer
-   */
-  private doQuery() {
+/**
+ * Attribute Query on a Specify Field in a FeatureLayer
+ * @param field 
+ * @param value 
+ * @param graphicsLayer 
+ */
+  private doFieldQuery(field,value,graphicsLayer) {
     // Clear the results from a previous query
-    this.resultsEstateLyr.removeAll();
+    graphicsLayer.removeAll();
     /*********************************************
      *
      * Set the where clause for the query. This can be any valid SQL expression.
@@ -242,12 +287,21 @@ export class EsriMapComponent implements OnInit {
      * may also be used here.
      *
      **********************************************/
-    //params.where = attributeName.value + expressionSign.value + value.value;
-    // console.log(this.query_params);
+    this.query_params.where = field + '='+ value;
+    this.qTask4EstateLay.execute(this.query_params)
+    .then(res=>{
+      console.log(res);
+    })
+    .otherwise(this.promiseRejected);
 
-    // executes the query and calls getResults() once the promise is resolved
-    // promiseRejected() is called if the promise is rejected
 
+
+  }
+
+
+  // Called each time the promise is rejected
+  private promiseRejected(err) {
+    console.error("Promise rejected: ", err.message);
   }
 
 
