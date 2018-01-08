@@ -9,6 +9,7 @@ import { SignUpPageComponent } from './sign-up-page/sign-up-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { EsriMapComponent } from './esri-map/esri-map.component';
 import { AppDataModelService } from './app-data-model.service';
+import { ProjectionModel } from './modelAlgorithm/projection';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { AppDataModelService } from './app-data-model.service';
     AppRoutingModule
   ],
   providers: [
-    AppDataModelService
+    AppDataModelService,
+    ProjectionModel
   ],
   bootstrap: [AppComponent]
 })
