@@ -11,6 +11,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 declare let $:any;
 declare let proj4:any;
+declare let turf:any;
 
 @Component({
   selector: 'app-esri-map',
@@ -627,7 +628,7 @@ export class EsriMapComponent implements OnInit {
 
       this.query_params4plot = new this.Query({
         geometry: polygonGeometry,
-        spatialRelationship: "overlaps",
+        spatialRelationship: "intersects",
         returnGeometry: true,
         outFields: ["*"]
       });
@@ -642,83 +643,27 @@ export class EsriMapComponent implements OnInit {
         
         this.resultsEstateLyr.addMany(layQuery);
         this.view.goTo(layQuery[0].geometry.extent);
+
+        layQuery.forEach(res =>{
+          console.log(turf.polygon(resultData));
+          // this.computeInterceptArea(turf.polygon(resultData),res)
+        });
         
-        
-
-        // this.view.goTo(plotResults.features[0].geometry.extent);
-        // const plot_layerQuery = createLayer(result, "polygon", result.fields);
-        // console.log(plot_layerQuery.source);
-        // this.view.goTo(plot_layerQuery.source.features[0].geometry.extent);
-        
-        // let myLay = this.createLayer(result);
-        // const projLay = this.projLayer2WebMer(result);
-
-        // let highlight = null;
-        // //highlightFeature(highlight, res);
-        // const queryfeature = projLay.source.features;
-        // console.log(projLay);
-        // this.view.whenLayerView(this.PLOTS).then((lyrView) => {
-        //   if (highlight) {
-        //     highlight.remove();
-        //   }
-        //   queryfeature.forEach(fea => {
-        //     highlight = lyrView.highlight(fea);
-        //   });
-
-        // })
-
       }
     ); // End of query task for polygon search
 
 
       }
     );
-
-  
-
-
-    //   // // const ring = this._projM.transformArray2_Minna31(resultData);
-    //   // const tst = createPointGraphics(resultData, resultID);
-    //   // console.log(tst);
-
-      
-
-
-
-    //   // this.polygonGeometry = {
-    //   //   type: "polygon",
-    //   //   rings: resultData,
-    //   //   spatialReference: { wkid: 4326 }
-    //   // }
-
-
-
-    //   // this.query_params4plot = new Query({
-    //   //   geometry: this.polygonGeometry,
-    //   //   spatialRelationship: "overlaps",
-    //   //   returnGeometry: true,
-    //   //   outFields: ["*"]
-    //   // });
-
-    //   // this.qTask4PlotLay = new QueryTask({
-    //   //   url: plotUrl
-    //   // });
-
-    //   // this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
-
-    //   //   // this.view.goTo(plotResults.features[0].geometry.extent);
-    //   //   // const plot_layerQuery = createLayer(result, "polygon", result.fields);
-    //   //   // console.log(plot_layerQuery.source);
-    //   //   // this.view.goTo(plot_layerQuery.source.features[0].geometry.extent);
-
-    //   // }); // End of query task for polygon search
-
-
-    // }); //  END OF on Search Button click
-
-    // this.result4PolygonSearch = [resultID, resultData];
-    // console.log([resultID, resultData]);
     
+  }
+
+  private computeInterceptArea(poly1,poly2){
+    const feature1 = turf.polygon(poly1.geometry.rings[0]);
+    const feature2 = turf.polygon(poly2.geometry.rings[0]);
+    var intersection = turf.intersect(feature1, feature2);
+
+    console.log(intersection);
   }
 
 
