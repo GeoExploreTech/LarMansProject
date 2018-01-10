@@ -515,27 +515,7 @@ export class EsriMapComponent implements OnInit {
 
 
   private openPolygonSearchDialog(){
-    // var poly1 = turf.polygon([[
-    //   [-122.801742, 45.48565],
-    //   [-122.801742, 45.60491],
-    //   [-122.584762, 45.60491],
-    //   [-122.584762, 45.48565],
-    //   [-122.801742, 45.48565]
-    // ]]);
-    
-    // var poly2 = turf.polygon([[
-    //   [-122.520217, 45.535693],
-    //   [-122.64038, 45.553967],
-    //   [-122.720031, 45.526554],
-    //   [-122.669906, 45.507309],
-    //   [-122.723464, 45.446643],
-    //   [-122.532577, 45.408574],
-    //   [-122.487258, 45.477466],
-    //   [-122.520217, 45.535693]
-    // ]]);
-    
-    // var intersection = turf.intersect(poly1, poly2);
-    // console.log(intersection);
+
     $("#polygonSearchTable").dialog({
       title: "Percel Charting",
       autoOpen: false,
@@ -597,6 +577,8 @@ export class EsriMapComponent implements OnInit {
     this.on($BTN, "click",()=>
       {
 
+        this.view.graphics.removeAll();
+
         const resultID = [];
         const resultData = [];
         //PLOTS.visible = false;
@@ -632,7 +614,7 @@ export class EsriMapComponent implements OnInit {
         });
 
       this.result4PolygonSearch = [resultID, resultData];
-      this.view.graphics.removeAll();
+      
       const laypoint = this.createPointGraphics(this.result4PolygonSearch[1], this.result4PolygonSearch[0]);
       const polygon2search = this.create_polygon(laypoint);
       this.view.graphics.add(polygon2search);
@@ -644,14 +626,6 @@ export class EsriMapComponent implements OnInit {
         rings: resultData,
         spatialReference: { wkid: 4326 }
       }
-
-     
-      var ll = [[[125, -15], [113, -22], [154, -27], [144, -15], [125, -15]]];
-      // var kk = [[resultData,resultData[0]]]
-      // console.log(kk);
-      // console.log(turf.polygon(kk));
-      // console.log(turf.polygon());
-
 
 
       this.query_params4plot = new this.Query({
@@ -668,17 +642,22 @@ export class EsriMapComponent implements OnInit {
       this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
 
         const layQuery = this.polygonLayFromFeatureLay(result, false, [58, 93, 209, 0.7]);
-        
+        this.resultsEstateLyr.removeAll()
         this.resultsEstateLyr.addMany(layQuery);
         this.view.goTo(layQuery[0].geometry.extent);
 
         const targetPolygon = turf.polygon(this.buildPolygon(resultData));
-        
+        const interceptsfeature = [];
 
         layQuery.forEach(res =>{
-          console.log(res);
-          this.computeInterceptArea(targetPolygon,res);
+          const getfea = this.computeInterceptArea(targetPolygon,res);
+          if(getfea !== 'undefined'){
+            interceptsfeature.push(getfea);
+          }
         });
+
+        const rigth = this.overlapAnalysis(targetPolygon,interceptsfeature);
+        console.log(rigth);
         
       }
     ); // End of query task for polygon search
@@ -701,11 +680,18 @@ export class EsriMapComponent implements OnInit {
   private computeInterceptArea(target,poly2){
 
     const feature2 = turf.polygon(poly2.geometry.rings);
-    // console.log(target);
-    // console.log(feature2);
-    var intersection = turf.intersect(target, feature2);
+    const intersection = turf.intersect(target, feature2);
+    
+    return intersection;
+  }
 
-    console.log(intersection);
+  private overlapAnalysis(target,intersections){
+    const area = [];
+    const targetArea = turf.area(target);
+    intersections.forEach(res =>{
+      area.push(turf.area(target));
+    });
+    return [target,area];
   }
 
 
