@@ -515,6 +515,27 @@ export class EsriMapComponent implements OnInit {
 
 
   private openPolygonSearchDialog(){
+    // var poly1 = turf.polygon([[
+    //   [-122.801742, 45.48565],
+    //   [-122.801742, 45.60491],
+    //   [-122.584762, 45.60491],
+    //   [-122.584762, 45.48565],
+    //   [-122.801742, 45.48565]
+    // ]]);
+    
+    // var poly2 = turf.polygon([[
+    //   [-122.520217, 45.535693],
+    //   [-122.64038, 45.553967],
+    //   [-122.720031, 45.526554],
+    //   [-122.669906, 45.507309],
+    //   [-122.723464, 45.446643],
+    //   [-122.532577, 45.408574],
+    //   [-122.487258, 45.477466],
+    //   [-122.520217, 45.535693]
+    // ]]);
+    
+    // var intersection = turf.intersect(poly1, poly2);
+    // console.log(intersection);
     $("#polygonSearchTable").dialog({
       title: "Percel Charting",
       autoOpen: false,
@@ -624,10 +645,7 @@ export class EsriMapComponent implements OnInit {
         spatialReference: { wkid: 4326 }
       }
 
-      this.buildPolygon(resultData);
-      
-
-
+     
       var ll = [[[125, -15], [113, -22], [154, -27], [144, -15], [125, -15]]];
       // var kk = [[resultData,resultData[0]]]
       // console.log(kk);
@@ -654,10 +672,13 @@ export class EsriMapComponent implements OnInit {
         this.resultsEstateLyr.addMany(layQuery);
         this.view.goTo(layQuery[0].geometry.extent);
 
-        // layQuery.forEach(res =>{
-        //   console.log(turf.polygon(resultData));
-        //   // this.computeInterceptArea(turf.polygon(resultData),res)
-        // });
+        const targetPolygon = turf.polygon(this.buildPolygon(resultData));
+        console.log(targetPolygon);
+
+        layQuery.forEach(res =>{
+          
+          this.computeInterceptArea(turf.polygon(targetPolygon),res);
+        });
         
       }
     ); // End of query task for polygon search
@@ -669,18 +690,20 @@ export class EsriMapComponent implements OnInit {
   }
 
   private buildPolygon(item){
-    const result = [];
-    for(let i = 0; i<item.length; i++){
-      console.log(item[i]);
+    const result = [[]];
+    for(let i = 0; i < item.length; i++){
+      result[0].push(item[i]);
     }
-    
+    result[0].push(item[0]);    
     return result;
   }
 
-  private computeInterceptArea(poly1,poly2){
-    const feature1 = turf.polygon(poly1.geometry.rings[0]);
+  private computeInterceptArea(target,poly2){
+
     const feature2 = turf.polygon(poly2.geometry.rings[0]);
-    var intersection = turf.intersect(feature1, feature2);
+    // console.log(target);
+    console.log(feature2);
+    var intersection = turf.intersect(target, feature2);
 
     console.log(intersection);
   }
