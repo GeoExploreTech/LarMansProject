@@ -477,7 +477,7 @@ export class EsriMapComponent implements OnInit {
   private polygonLayFromFeatureLay(feature, toTransform:boolean, color:Array<Number>){
     const polygonGraphic = [];
     feature.features.forEach(item=>{
-      console.log(item);
+      // console.log(item);
       let ring;
       if (toTransform) {
         ring = this._projM.transformArray2_Minna31(item.geometry.rings[0]);
@@ -624,6 +624,16 @@ export class EsriMapComponent implements OnInit {
         spatialReference: { wkid: 4326 }
       }
 
+      const rr = this.buildPolygon(resultData[0]);
+      console.log(rr);
+
+
+      var ll = [[[125, -15], [113, -22], [154, -27], [144, -15], [125, -15]]];
+      // var kk = [[resultData,resultData[0]]]
+      // console.log(kk);
+      // console.log(turf.polygon(kk));
+      // console.log(turf.polygon());
+
 
 
       this.query_params4plot = new this.Query({
@@ -644,10 +654,10 @@ export class EsriMapComponent implements OnInit {
         this.resultsEstateLyr.addMany(layQuery);
         this.view.goTo(layQuery[0].geometry.extent);
 
-        layQuery.forEach(res =>{
-          console.log(turf.polygon(resultData));
-          // this.computeInterceptArea(turf.polygon(resultData),res)
-        });
+        // layQuery.forEach(res =>{
+        //   console.log(turf.polygon(resultData));
+        //   // this.computeInterceptArea(turf.polygon(resultData),res)
+        // });
         
       }
     ); // End of query task for polygon search
@@ -656,6 +666,14 @@ export class EsriMapComponent implements OnInit {
       }
     );
     
+  }
+
+  private buildPolygon(item){
+    const result = [[item[0]]];
+    item.forEach(res=>{
+      result[0].push(res);
+    })
+    return result;
   }
 
   private computeInterceptArea(poly1,poly2){
