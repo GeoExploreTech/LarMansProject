@@ -676,7 +676,7 @@ export class EsriMapComponent implements OnInit {
         
 
         layQuery.forEach(res =>{
-          // console.log(res);
+          console.log(res);
           this.computeInterceptArea(targetPolygon,res);
         });
         
