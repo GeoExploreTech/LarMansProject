@@ -648,15 +648,17 @@ export class EsriMapComponent implements OnInit {
 
         const targetPolygon = turf.polygon(this.buildPolygon(resultData));
         const interceptsfeature = [];
+        const originalfeatures = [];
 
         layQuery.forEach(res =>{
           const getfea = this.computeInterceptArea(targetPolygon,res);
+          originalfeatures.push(turf.polygon(res.geometry.rings));
           if(getfea !== 'undefined'){
             interceptsfeature.push(getfea);
           }
         });
 
-        const rigth = this.overlapAnalysis(targetPolygon,interceptsfeature);
+        const rigth = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
         console.log(rigth);
         
       }
@@ -685,13 +687,17 @@ export class EsriMapComponent implements OnInit {
     return intersection;
   }
 
-  private overlapAnalysis(target,intersections){
-    const area = [];
+  private overlapAnalysis(target,intersections,originalfeatures){
+    const area4Intersect = [];
+    const area4originalFeatures =[];
     const targetArea = turf.area(target);
     intersections.forEach(res =>{
-      area.push(turf.area(target));
+      area4Intersect.push(turf.area(res));
     });
-    return [target,area];
+    originalfeatures.forEach(res =>{
+      area4originalFeatures.push(turf.area(res));
+    });
+    return [targetArea,area4Intersect,area4originalFeatures];
   }
 
 
