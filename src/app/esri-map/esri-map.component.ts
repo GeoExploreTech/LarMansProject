@@ -673,11 +673,11 @@ export class EsriMapComponent implements OnInit {
         this.view.goTo(layQuery[0].geometry.extent);
 
         const targetPolygon = turf.polygon(this.buildPolygon(resultData));
-        console.log(targetPolygon);
+        
 
         layQuery.forEach(res =>{
-          
-          this.computeInterceptArea(turf.polygon(targetPolygon),res);
+          // console.log(res);
+          this.computeInterceptArea(targetPolygon,res);
         });
         
       }
@@ -700,9 +700,9 @@ export class EsriMapComponent implements OnInit {
 
   private computeInterceptArea(target,poly2){
 
-    const feature2 = turf.polygon(poly2.geometry.rings[0]);
+    const feature2 = turf.polygon(poly2.geometry.rings);
     // console.log(target);
-    console.log(feature2);
+    // console.log(feature2);
     var intersection = turf.intersect(target, feature2);
 
     console.log(intersection);
