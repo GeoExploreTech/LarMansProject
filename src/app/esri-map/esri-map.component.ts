@@ -624,8 +624,8 @@ export class EsriMapComponent implements OnInit {
         spatialReference: { wkid: 4326 }
       }
 
-      const rr = this.buildPolygon(resultData[0]);
-      console.log(rr);
+      this.buildPolygon(resultData);
+      
 
 
       var ll = [[[125, -15], [113, -22], [154, -27], [144, -15], [125, -15]]];
@@ -669,10 +669,11 @@ export class EsriMapComponent implements OnInit {
   }
 
   private buildPolygon(item){
-    const result = [[item[0]]];
-    item.forEach(res=>{
-      result[0].push(res);
-    })
+    const result = [];
+    for(let i = 0; i<item.length; i++){
+      console.log(item[i]);
+    }
+    
     return result;
   }
 
