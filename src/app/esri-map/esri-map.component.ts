@@ -517,7 +517,7 @@ export class EsriMapComponent implements OnInit {
   private openPolygonSearchDialog(){
 
     $("#polygonSearchTable").dialog({
-      title: "Percel Charting",
+      title: "Parcel Charting",
       autoOpen: false,
       modal: false,
       icon: "ui-icon-close",
@@ -541,8 +541,30 @@ export class EsriMapComponent implements OnInit {
 
   }
 
+  private displayReport(){
+    $("#reporterId").dialog({
+      title: "Parcel Charting Report",
+      autoOpen: false,
+      modal: false,
+      icon: "ui-icon-close",
+      resizable: true,
+      width: 600,
+      height: 500,
+      position: {
+        my: 'left top+50',
+        at: 'left top+50',
+        of: "#mapId"
+      },
+      collision: "fit flip",
+      resize: (event, ui) => {
+        $("#reporterId").css({
+          "margin": "0"
+        });
+      }
+    });
 
-
+    $("#reporterId").dialog("open");
+  }
 
   private polygonSearchTableModel(){
     $("#polygonSearchTable").dialog("open");

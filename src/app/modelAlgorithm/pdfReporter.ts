@@ -1,10 +1,11 @@
 import { ProjectionModel } from '../modelAlgorithm/projection';
-import * as jsPDF from 'jspdf';
+declare var jsPDF: any; // Important
 
 
 export class PdfReporter{
+    private doc:any;
     constructor(){
-        const doc = new jsPDF();
+        this.doc = new jsPDF('p', 'pt');
         
     }
 

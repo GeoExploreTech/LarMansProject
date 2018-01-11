@@ -153,6 +153,13 @@
 
     </div>
 
+    <!-- WIDGET FOR RESULT REPORTING -->
+    <div class="sidebar reportViewer" id="reporterId">
+        <iframe class="frame" id="output">
+            
+        </iframe>
+    </div>
+
     <!-- WIDGET FOR DATA QUERYING -->
     <div class="sidebar table-editable" id="polygonSearchTable">
         <div>
@@ -205,7 +212,7 @@
 
         <div>
             <button id="search-btn" class="mini ui primary button">Search Data</button>
-            <button id="report-btn" class="mini ui primary button">View Report</button>
+            <button id="report-btn" class="mini ui primary button" (click)="displayReport()">View Report</button>
             <!-- <button class="mini ui primary button" (click)="polygonSearchQuery()">Process Data</button> -->
         </div>
 
