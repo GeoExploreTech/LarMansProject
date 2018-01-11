@@ -87,54 +87,52 @@
 
         <div class="ui styled accordion">
             <div class="title">
-                <i class="dropdown icon"></i>
-               Working Layer
+                <i class="dropdown icon"></i> Working Layer
             </div>
             <div class="content">
-                <div >
-                
+                <div>
+
                     <div class="ui inverted divider"></div>
-                    <div >
+                    <div>
                         <button class="mini ui primary button" id="load-EstateLayer" (click)="openLayersDialog()">
                             Schemes
                         </button>
                     </div>
                     <div class="ui inverted divider"></div>
-                    <div >
+                    <div>
                         <button class="mini ui primary button" id="acquisiton_btn">
                             Acquisition
                         </button>
                     </div>
                     <div class="ui inverted divider"></div>
-                
+
                 </div>
             </div>
         </div>
 
-            <div class="ui styled accordion">
-                <div class="title">
-                    <i class="dropdown icon"></i>
-                    Spatial Query
-                </div>
-                <div class="content">
-                    <div >
-                        <div class="ui inverted divider"></div>
-                        <div >
-                            <button class="mini ui primary button menu" (click)="openPolygonSearchDialog()">
+        <div class="ui styled accordion">
+            <div class="title">
+                <i class="dropdown icon"></i> Spatial Query
+            </div>
+            <div class="content">
+                <div>
+                    <div class="ui inverted divider"></div>
+                    <div>
+                        <button class="mini ui primary button menu" (click)="openPolygonSearchDialog()">
                                 PolygonSearch
                             </button>
-                        </div>
-                        <div class="ui inverted divider"></div>
-                        <div >
-                            <button class="mini ui primary button menu" >
+                    </div>
+                    <div class="ui inverted divider"></div>
+                    <div>
+                        <button class="mini ui primary button menu">
                                 Acquisition
                             </button>
-                        </div>
-                        <div class="ui inverted divider"></div>
-            
                     </div>
+                    <div class="ui inverted divider"></div>
+
                 </div>
             </div>
+        </div>
 
 
     </div>
@@ -158,7 +156,7 @@
     <!-- WIDGET FOR DATA QUERYING -->
     <div class="sidebar table-editable" id="polygonSearchTable">
         <div>
-            <span ><i class="table-add plus icon"></i></span>
+            <span><i class="table-add plus icon"></i></span>
             <table class="table">
                 <tr>
                     <th>Stn_ID</th>
@@ -172,21 +170,21 @@
                     <td contenteditable="true">5253663</td>
                     <td contenteditable="true">7068848</td>
                     <td>
-                        <span ><i class="table-remove remove icon"></i></span>
+                        <span><i class="table-remove remove icon"></i></span>
                     </td>
                     <td>
                         <span><i class="table-up arrow up icon"></i></span>
                         <span>
                             <i class="table-down arrow down icon"></i>
                         </span>
-                        
+
                     </td>
                 </tr>
                 <!-- This is our clonable table line -->
                 <tr class="hide">
-                    <td contenteditable="true">pb</td>
-                    <td contenteditable="true">undefined</td>
-                    <td contenteditable="true">undefined</td>
+                    <td contenteditable="true">Pb</td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
                     <td>
                         <span>
                             <i class="table-remove remove icon"></i>
@@ -199,17 +197,18 @@
                         <span>
                             <i class="table-down arrow down icon"></i>
                         </span>
-                    
+
                     </td>
                 </tr>
             </table>
         </div>
-    
+
         <div>
             <button id="search-btn" class="mini ui primary button">Search Data</button>
+            <button id="report-btn" class="mini ui primary button">View Report</button>
             <!-- <button class="mini ui primary button" (click)="polygonSearchQuery()">Process Data</button> -->
         </div>
-    
+
     </div>
 
 

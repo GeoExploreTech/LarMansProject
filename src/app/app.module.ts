@@ -10,6 +10,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { EsriMapComponent } from './esri-map/esri-map.component';
 import { AppDataModelService } from './app-data-model.service';
 import { ProjectionModel } from './modelAlgorithm/projection';
+import { PdfReporter } from './modelAlgorithm/pdfReporter'
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { ProjectionModel } from './modelAlgorithm/projection';
   ],
   providers: [
     AppDataModelService,
-    ProjectionModel
+    ProjectionModel,
+    PdfReporter
   ],
   bootstrap: [AppComponent]
 })
