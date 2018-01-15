@@ -673,6 +673,7 @@ export class EsriMapComponent implements OnInit {
         const originalfeatures = [];
 
         layQuery.forEach(res =>{
+          console.log(res);
           const getfea = this.computeInterceptArea(targetPolygon,res);
           originalfeatures.push(turf.polygon(res.geometry.rings));
           if(getfea !== 'undefined'){
