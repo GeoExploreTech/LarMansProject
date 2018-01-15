@@ -163,19 +163,20 @@ export class EsriMapComponent implements OnInit {
       this.result4PlotQuery = new GraphicsLayer();
 
 
-      // URL to feature service containing points representing the 50
-      // most prominent peaks in the U.S.
-      const estateUrl ="https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LAND_RECORD_MANAGEMENT_SYS/FeatureServer/4";
-      this.plotUrl = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LAND_RECORD_MANAGEMENT_SYS/FeatureServer/3";
+      // URL to feature service containing the enterprise database model
+      const enterpriseDB = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer"
+ 
 
       this.ESTATE = new FeatureLayer({
-        url: estateUrl,
+        url: enterpriseDB,
+        layerId: 2,
         outFields: ["*"],
         visible: false
       });
 
       this.ROAD_NETWORK = new FeatureLayer({
-        url: "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LAND_RECORD_MANAGEMENT_SYS/FeatureServer/1",
+        url: enterpriseDB,
+        layerId: 0,
         outFields: ["*"],
         visible: false
 
@@ -188,7 +189,8 @@ export class EsriMapComponent implements OnInit {
       });
 
       this.PLOTS = new FeatureLayer({
-        url: this.plotUrl,
+        url: enterpriseDB,
+        layerId: 1,
         outFields: ["*"],
         //renderer: plotRenderer,
         visible: false
@@ -203,7 +205,7 @@ export class EsriMapComponent implements OnInit {
        *  Point QueryTask to URL of feature service
        *****************************************************************/
       this.qTask4EstateLay = new QueryTask({
-        url: estateUrl
+        url: "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/2?token=uzsUmjaHFwT3MMeC6oJXqY7TCArS4qWT6Fnl0TpqFfPQwTplPa6G4iatZdR3D7ni2gM5y66cSUoK87qxptCX9mrz4EDRaUgvNo28zV2w5D8V4vaxCkGPueizqJM8puvcPlPtXAX7Pt8kSNvt9yz3dpHm3NIXZjLkzejKU9wmmmlpIYaYIV8DyJNmEH8mvfiQHybwEVSoNeOUKBXf0MBIF3AMl81lAqr961EyRYxjY_Er_ib0oFBmMJuaDGnZ-d-7"
       });
 
 
@@ -658,7 +660,7 @@ export class EsriMapComponent implements OnInit {
       });
 
       this.qTask4PlotLay = new this.QueryTask({
-        url: this.plotUrl
+        url: "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/1?token=uzsUmjaHFwT3MMeC6oJXqY7TCArS4qWT6Fnl0TpqFfPQwTplPa6G4iatZdR3D7ni2gM5y66cSUoK87qxptCX9mrz4EDRaUgvNo28zV2w5D8V4vaxCkGPueizqJM8puvcPlPtXAX7Pt8kSNvt9yz3dpHm3NIXZjLkzejKU9wmmmlpIYaYIV8DyJNmEH8mvfiQHybwEVSoNeOUKBXf0MBIF3AMl81lAqr961EyRYxjY_Er_ib0oFBmMJuaDGnZ-d-7"
       });
 
       this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
