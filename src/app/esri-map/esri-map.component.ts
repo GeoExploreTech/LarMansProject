@@ -1,3 +1,4 @@
+import { PdfReporter } from './../modelAlgorithm/pdfReporter';
 import { Component, OnInit } from '@angular/core';
 import { AppDataModelService } from '../app-data-model.service';
 import { Router} from '@angular/router';
@@ -77,7 +78,8 @@ export class EsriMapComponent implements OnInit {
   constructor(
     private _esriMapModule:AppDataModelService,
     private router:Router,
-    private _projM: ProjectionModel
+    private _projM: ProjectionModel,
+    private pdfReport: PdfReporter
   ) {
   //  this._projM = new ProjectionModel();
 
@@ -550,8 +552,8 @@ export class EsriMapComponent implements OnInit {
       modal: false,
       icon: "ui-icon-close",
       resizable: true,
-      width: 600,
-      height: 500,
+      width: 1000,
+      height: 600,
       position: {
         my: 'left top+50',
         at: 'left top+50',
@@ -564,10 +566,19 @@ export class EsriMapComponent implements OnInit {
         });
       }
     });
+    const outputPdf = this.dom.byId("output");
+    const doc = this.pdfReport.contentDisplay();
+    console.log(outputPdf);
+    outputPdf.src = doc.output('datauristring');
 
     $("#reporterId").dialog("open");
+
+
   }
 
+  /**
+   * Parcel polygon search function
+   */
   private polygonSearchTableModel(){
     $("#polygonSearchTable").dialog("open");
 

@@ -1,72 +1,98 @@
+import { forEach } from '@angular/router/src/utils/collection';
 import { ProjectionModel } from '../modelAlgorithm/projection';
 declare var jsPDF: any; // Important
 
 
+
+
+
 export class PdfReporter{
     private doc:any;
-    constructor(){
-        this.doc = new jsPDF('p', 'pt');
-        
+    private dataId: string[] = [
+        "FEATURE ID",
+        "ESTATE NAME",
+        "PLOT NUMBER",
+        "PLAN NUMBER",
+        "ADDRESS",
+        "SIZE (Sq.m)",
+        "PERCENTAGE OVERLAP",
+        "STATUS"
+    ];
+
+    private dataArray: any[];
+    private numOfFeatures: Number;
+
+
+    constructor(dataArray: any[], numOfFeatures: Number ){
+        this.doc = new jsPDF('p', 'mm','a4');
+        this.dataArray = dataArray;
+        this.numOfFeatures = numOfFeatures;
     }
 
     // Content - shows how tables can be integrated with any other pdf content
-    public contentDisplay () {
-        var doc = new jsPDF();
+    public writeChattingReport () {
+            
+        this.doc.setFontSize(18);
+        this.doc.setTextColor(54, 124, 237);
+        this.doc.setFontStyle("italic")
+        this.doc.text(' LARMANS PARCEL CHATTING GENERATED REPORT ', 20, 22);
+
+        this.doc.setFontSize(12);
+        
+        
+        var text = "LARMANS PERCEL CHARTING RESULT"
+        this.doc.text(text, 14, 30);
     
-        doc.setFontSize(18);
-        doc.text('INPUT PERCEL INFORMATION', 14, 22);
-        doc.setFontSize(11);
-        doc.setTextColor(100);
-        var text = ""
-        doc.text(text, 14, 30);
+        // var cols = this.getColumns();
+        // cols.splice(0, 2);
+        // doc.autoTable(cols, getData(40), {startY: 50, showHeader: 'firstPage'});
     
-        var cols = this.getColumns();
-        cols.splice(0, 2);
-        doc.autoTable(cols, getData(40), {startY: 50, showHeader: 'firstPage'});
-    
-        doc.text(text, 14, doc.autoTable.previous.finalY + 10);
+        // this.doc.text(text, 14, this.doc.autoTable.previous.finalY + 10);
     
     
-        return doc;
+        return this.doc;
     };
 
     // Returns a new array each time to avoid pointer issues
-    private getColumns = function () {
+    private getDetailColumns = function () {
         return [
-            {title: "STATION ID", dataKey: "id"},
-            {title: "EASTING (m)", dataKey: "easting"},
-            {title: "NORTHING (m)", dataKey: "northing"},
-            {title: "FEATURE ID", dataKey: "feature"},
-            {title: "ESTATE NAME", dataKey: "estateName"},
-            {title: "PLOT NUMBER", dataKey: "plotNumber"},
-            {title: "PLAN NUMBER", dataKey: "planNumber"},
-            {title: "ADDRESS", dataKey: "address"},
-            {title: "SIZE (Sq.m)", dataKey: "size"},
-            {title: "PERCENTAGE OVERLAP", dataKey: "percentageOverlap"},
-            {title: "STATUS", dataKey: "status"}
+            {title: "HEADING", dataKey: "heading"},
+            {title: "DETAILS", dataKey: "detail"}
         ];
     };
 
+    private getId_EastingNorthingColumns = function() {
+        return[
+            {title: "STATION ID", dataKey: "id"},
+            {title: "EASTING (m)", dataKey: "easting"},
+            {title: "NORTHING (m)", dataKey: "northing"}
 
-    // public getData(rowCount) {
+        ];
+    }
 
-    //     var data = [];
-    //     for (var j = 1; j <= rowCount; j++) {
-    //         data.push({
-    //             id: j,
-    //             name: faker.name.findName(),
-    //             email: faker.internet.email(),
-    //             country: faker.address.country(),
-    //             city: faker.address.city(),
-    //             expenses: faker.finance.amount(),
-    //             text: shuffleSentence(sentence),
-    //             text2: faker.lorem.words(1)
-    //         });
-    //     }
-    //     return data;
-    // }
-    
 
+
+    public getChattingData(dataArray){
+        const data = [];
+        let count = 0;
+        dataArray.forEach(item =>{
+            data.push({
+                heading: this.dataId[count],
+                detail: item
+            });
+
+            count = count +1;
+        });
+
+        return data;
+    }
+
+
+
+
+    public writeChatingReport(){
+
+    }
 
     
 }
