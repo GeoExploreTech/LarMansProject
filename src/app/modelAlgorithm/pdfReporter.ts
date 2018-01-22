@@ -25,7 +25,7 @@ export class PdfReporter{
 
     constructor(dataArray: any[], numOfFeatures: Number ){
         this.doc = new jsPDF('p', 'mm','a4');
-        this.dataArray = dataArray;
+        this.dataArray = this.getChattingData(dataArray);
         this.numOfFeatures = numOfFeatures;
     }
 
@@ -39,15 +39,14 @@ export class PdfReporter{
 
         this.doc.setFontSize(12);
         
-        
-        var text = "LARMANS PERCEL CHARTING RESULT"
-        this.doc.text(text, 14, 30);
-    
-        // var cols = this.getColumns();
-        // cols.splice(0, 2);
-        // doc.autoTable(cols, getData(40), {startY: 50, showHeader: 'firstPage'});
-    
-        // this.doc.text(text, 14, this.doc.autoTable.previous.finalY + 10);
+        for( let j=0; j<this.numOfFeatures; j++){
+            this.doc.autoTable(this.getDetailColumns().splice(1, 2), this.dataArray[j], {
+                showHeader: 'never',
+                columnStyles: {
+                    heading: {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+                }
+            });
+        }
     
     
         return this.doc;
@@ -72,7 +71,7 @@ export class PdfReporter{
 
 
 
-    public getChattingData(dataArray){
+    private getChattingData(dataArray){
         const data = [];
         let count = 0;
         dataArray.forEach(item =>{
