@@ -11,21 +11,32 @@ export class PdfReporter{
     private dataId: string[] = [
         "FEATURE ID",
         "ESTATE NAME",
+        "BLOCK ID",
         "PLOT NUMBER",
         "PLAN NUMBER",
-        "ADDRESS",
-        "SIZE (Sq.m)",
+        "OVERLAP-FEATURE SIZE (Sq.m)",
+        "SEARCH-FEATURE SIZE (Sq.m)",
         "PERCENTAGE OVERLAP",
+        "STREET ID",
+        "STREET NAME",
+        "LCDA",
+        "LGA",
+        "CITY ",
+        "REGION",
+        "COUNTRY",
         "STATUS"
     ];
 
-    private dataArray: any[];
+    private dataArrayQuery: any;
     private numOfFeatures: Number;
 
 
-    constructor(dataArray: any[], numOfFeatures: Number ){
+    constructor() {
         this.doc = new jsPDF('p', 'mm','a4');
-        this.dataArray = this.getChattingData(dataArray);
+    }
+
+    public initWriterModule(dataArrayQuery: any, numOfFeatures: Number){
+        this.dataArrayQuery = this.getChattingData(dataArrayQuery);
         this.numOfFeatures = numOfFeatures;
     }
 
@@ -40,7 +51,7 @@ export class PdfReporter{
         this.doc.setFontSize(12);
         
         for( let j=0; j<this.numOfFeatures; j++){
-            this.doc.autoTable(this.getDetailColumns().splice(1, 2), this.dataArray[j], {
+            this.doc.autoTable(this.getDetailColumns().splice(1, 2), this.dataArrayQuery[j], {
                 showHeader: 'never',
                 columnStyles: {
                     heading: {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
@@ -71,26 +82,26 @@ export class PdfReporter{
 
 
 
-    private getChattingData(dataArray){
-        const data = [];
-        let count = 0;
-        dataArray.forEach(item =>{
-            data.push({
-                heading: this.dataId[count],
-                detail: item
+    private getChattingData(dataArrayQuery:any[]){
+        const finalData = [];
+
+        for(let i=0; i<dataArrayQuery.length; i++){
+            const data = [];
+            let count = 0;
+            dataArrayQuery[i].forEach(item =>{
+                data.push({
+                    heading: this.dataId[count],
+                    detail: item
+                });
+    
+                count = count +1;
             });
 
-            count = count +1;
-        });
-
-        return data;
-    }
+            finalData.push(data);
+        }
 
 
-
-
-    public writeChatingReport(){
-
+        return finalData;
     }
 
     

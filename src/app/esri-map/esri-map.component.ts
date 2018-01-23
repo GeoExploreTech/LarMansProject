@@ -53,6 +53,11 @@ export class EsriMapComponent implements OnInit {
   private BLOCKS:any;
   private ROAD_NETWORK:any;
 
+  private roadNetworkURL:string;
+  private lcdasURL:string;
+  private plotURL: string;
+  private estateURL: string;
+
 
   private plotUrl:string;
   
@@ -78,8 +83,8 @@ export class EsriMapComponent implements OnInit {
   constructor(
     private _esriMapModule:AppDataModelService,
     private router:Router,
-    private _projM: ProjectionModel,
-    private pdfReport: PdfReporter
+    private _projM: ProjectionModel
+    // private pdfReport: PdfReporter
   ) {
   //  this._projM = new ProjectionModel();
 
@@ -198,16 +203,19 @@ export class EsriMapComponent implements OnInit {
         visible: false
       });
 
+      // Plot URL
+      this.plotURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/1?token=0vKFB3Ssp4PKKqmv43LKpYAVDVGMEkeqwifiBx8cZfYpaAyXll_ILdPN6bcEwNGz3aTVV9cRoarN2gmjk8BJt1aeQZ4fkRtAb44JnqgBlvzg0q4xP501px5jEPrwZGEecGLW82vA6Lx8XT_acRMm_szehDFKaU5663Qppqk_8AD_UZnAhVdNtlPjuFC78Htxb4YcWGuuAmvLbzGtKoIUjCkzJ1Kk2j8YayOokJyUCbFbGFf5NnfjsMqbMyFS-RgL";
+      // Road Network URL
+      this.roadNetworkURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/0?token=0vKFB3Ssp4PKKqmv43LKpYAVDVGMEkeqwifiBx8cZfYpaAyXll_ILdPN6bcEwNGz3aTVV9cRoarN2gmjk8BJt1aeQZ4fkRtAb44JnqgBlvzg0q4xP501px5jEPrwZGEecGLW82vA6Lx8XT_acRMm_szehDFKaU5663Qppqk_8AD_UZnAhVdNtlPjuFC78Htxb4YcWGuuAmvLbzGtKoIUjCkzJ1Kk2j8YayOokJyUCbFbGFf5NnfjsMqbMyFS-RgL";
+      // LCDAS feature URL
+      this.lcdasURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/3?token=0vKFB3Ssp4PKKqmv43LKpYAVDVGMEkeqwifiBx8cZfYpaAyXll_ILdPN6bcEwNGz3aTVV9cRoarN2gmjk8BJt1aeQZ4fkRtAb44JnqgBlvzg0q4xP501px5jEPrwZGEecGLW82vA6Lx8XT_acRMm_szehDFKaU5663Qppqk_8AD_UZnAhVdNtlPjuFC78Htxb4YcWGuuAmvLbzGtKoIUjCkzJ1Kk2j8YayOokJyUCbFbGFf5NnfjsMqbMyFS-RgL";
 
-
-
-
-
-       /*****************************************************************
-       *  Point QueryTask to URL of feature service
-       *****************************************************************/
+      /*****************************************************************
+      * Point QueryTask to URL of feature service
+      *****************************************************************/
+      this.estateURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/2?token=uzsUmjaHFwT3MMeC6oJXqY7TCArS4qWT6Fnl0TpqFfPQwTplPa6G4iatZdR3D7ni2gM5y66cSUoK87qxptCX9mrz4EDRaUgvNo28zV2w5D8V4vaxCkGPueizqJM8puvcPlPtXAX7Pt8kSNvt9yz3dpHm3NIXZjLkzejKU9wmmmlpIYaYIV8DyJNmEH8mvfiQHybwEVSoNeOUKBXf0MBIF3AMl81lAqr961EyRYxjY_Er_ib0oFBmMJuaDGnZ-d-7";
       this.qTask4EstateLay = new QueryTask({
-        url: "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/2?token=uzsUmjaHFwT3MMeC6oJXqY7TCArS4qWT6Fnl0TpqFfPQwTplPa6G4iatZdR3D7ni2gM5y66cSUoK87qxptCX9mrz4EDRaUgvNo28zV2w5D8V4vaxCkGPueizqJM8puvcPlPtXAX7Pt8kSNvt9yz3dpHm3NIXZjLkzejKU9wmmmlpIYaYIV8DyJNmEH8mvfiQHybwEVSoNeOUKBXf0MBIF3AMl81lAqr961EyRYxjY_Er_ib0oFBmMJuaDGnZ-d-7"
+        url: this.estateURL
       });
 
 
@@ -567,9 +575,9 @@ export class EsriMapComponent implements OnInit {
       }
     });
     const outputPdf = this.dom.byId("output");
-    const doc = this.pdfReport.contentDisplay();
-    console.log(outputPdf);
-    outputPdf.src = doc.output('datauristring');
+    // const doc = this.pdfReport.contentDisplay();
+    // console.log(outputPdf);
+    // outputPdf.src = doc.output('datauristring');
 
     $("#reporterId").dialog("open");
 
@@ -671,7 +679,7 @@ export class EsriMapComponent implements OnInit {
       });
 
       this.qTask4PlotLay = new this.QueryTask({
-        url: "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/1?token=uzsUmjaHFwT3MMeC6oJXqY7TCArS4qWT6Fnl0TpqFfPQwTplPa6G4iatZdR3D7ni2gM5y66cSUoK87qxptCX9mrz4EDRaUgvNo28zV2w5D8V4vaxCkGPueizqJM8puvcPlPtXAX7Pt8kSNvt9yz3dpHm3NIXZjLkzejKU9wmmmlpIYaYIV8DyJNmEH8mvfiQHybwEVSoNeOUKBXf0MBIF3AMl81lAqr961EyRYxjY_Er_ib0oFBmMJuaDGnZ-d-7"
+        url: this.plotURL
       });
 
       this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
@@ -681,21 +689,25 @@ export class EsriMapComponent implements OnInit {
         this.resultsEstateLyr.addMany(layQuery);
         this.view.goTo(layQuery[0].geometry.extent);
 
-        const targetPolygon = turf.polygon(this.buildPolygon(resultData));
-        const interceptsfeature = [];
-        const originalfeatures = [];
+        const targetPolygon = turf.polygon(this.buildPolygon(resultData)); // target polygon to search for
+
+      
+        const eachFeatureRecord = []; // Storing record from search parcel query features
 
         layQuery.forEach(res =>{
-          console.log(res);
-          const getfea = this.computeInterceptArea(targetPolygon,res);
-          originalfeatures.push(turf.polygon(res.geometry.rings));
+          
+          const getfea = this.extractInterceptArea(targetPolygon,res);
+          const originalfeatures = turf.polygon(res.geometry.rings);
+
           if(getfea !== 'undefined'){
-            interceptsfeature.push(getfea);
+            const interceptsfeature = getfea;
+            const areaAnalysis = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
+            console.log(areaAnalysis);
+            eachFeatureRecord.push(this.getParcelRecord_from_Database(res,1,areaAnalysis));
           }
         });
 
-        const rigth = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
-        console.log(rigth);
+
         
       }
     ); // End of query task for polygon search
@@ -715,7 +727,7 @@ export class EsriMapComponent implements OnInit {
     return result;
   }
 
-  private computeInterceptArea(target,poly2){
+  private extractInterceptArea(target,poly2){
 
     const feature2 = turf.polygon(poly2.geometry.rings);
     const intersection = turf.intersect(target, feature2);
@@ -723,17 +735,122 @@ export class EsriMapComponent implements OnInit {
     return intersection;
   }
 
+
+/**
+ * Method for get all record related to the target feature
+ * @param targetFeature : target feature form previous query
+ * @param count
+ */
+  private getParcelRecord_from_Database(targetFeature,count,areaAnalysis){
+    const recordHeading = [
+      "FEATURE ID",
+      "ESTATE NAME",
+      "BLOCK ID",
+      "PLOT NUMBER",
+      "PLAN NUMBER",
+      "OVERLAP-FEATURE SIZE (Sq.m)",
+      "SEARCH-FEATURE SIZE (Sq.m)",
+      "PERCENTAGE OVERLAP",
+      "STREET ID",
+      "STREET NAME",
+      "LCDA",
+      "LGA",
+      "CITY ",
+      "REGION",
+      "COUNTRY",
+      "STATUS"
+    ];
+    const recordValues = [];
+    const recordsResult = [];
+
+    // Pointing QueryTask to Road Network URL feature service
+    const qTask = new this.QueryTask({
+      url: this.roadNetworkURL
+    });
+
+    const params1 = new this.Query({
+      returnGeometry: true,
+      outFields: ["*"]
+    });
+
+    const streetId:string = targetFeature.attributes.StreetID;
+    params1.where =  "StreetID = '" + streetId + "'";
+    
+    // executes the query and calls getResults() once the promise is resolved
+    // promiseRejected() is called if the promise is rejected
+    qTask.execute(params1)
+      .then(response1=>{ // response1 is from the road network
+
+        console.log(response1);
+        // Pointing QueryTask to Road Network URL feature service
+        const qTask2 = new this.QueryTask({
+          url: this.lcdasURL
+        });
+      
+        const params2 = new this.Query({
+          returnGeometry: true,
+          outFields: ["*"]
+        });
+
+        params2.geometry = response1.features[0].geometry;
+        qTask2.execute(params2)
+        .then(response2 =>{
+
+          console.log(response2);
+
+          // Gathering all records form all link database
+          recordValues.push(count);
+          recordValues.push(targetFeature.attributes.ESTATE);
+          recordValues.push(targetFeature.attributes.BLOCK_ID);
+          recordValues.push(targetFeature.attributes.PLOT_NO);
+          recordValues.push(targetFeature.attributes.PLAN_NO);
+          recordValues.push(areaAnalysis[2]); // "OVERLAP-FEATURE SIZE (Sq.m)"
+          recordValues.push(areaAnalysis[1]); // "SEARCH-FEATURE SIZE (Sq.m)"
+          recordValues.push(areaAnalysis[3]); // "PERCENTAGE OVERLAP"
+          recordValues.push(response1.features[0].attributes.StreetID); // "STREET ID"
+          recordValues.push(response1.features[0].attributes.Street); // "STREET NAME"
+          recordValues.push(response2.features[0].attributes.LCDA); // "LCDA"
+          recordValues.push(response2.features[0].attributes.LGA); // "LGA"
+          recordValues.push(response1.features[0].attributes.City); // "CITY "
+          recordValues.push(response1.features[0].attributes.Region); //  "REGION"
+          recordValues.push(response1.features[0].attributes.Country); //  "country"
+          recordValues.push("STATUS"); //  "country"
+          
+
+
+        });
+      })
+      .otherwise(this.promiseRejected);
+
+      for(let i=0; i<recordHeading.length; i++){
+        const heading = recordHeading[i];
+        recordsResult.push({
+          heading: recordValues[i]
+        });
+      }
+
+      return recordsResult;
+  }
+
+  /**
+   * Module for Area analysis, percentage overlap
+   *  and other overlaping analysis
+   * @param target 
+   * @param intersections 
+   * @param originalfeatures 
+   */
   private overlapAnalysis(target,intersections,originalfeatures){
-    const area4Intersect = [];
-    const area4originalFeatures =[];
+
+    const area4Intersect = turf.area(intersections);
+    const area4originalFeatures =turf.area(originalfeatures);
     const targetArea = turf.area(target);
-    intersections.forEach(res =>{
-      area4Intersect.push(turf.area(res));
-    });
-    originalfeatures.forEach(res =>{
-      area4originalFeatures.push(turf.area(res));
-    });
-    return [targetArea,area4Intersect,area4originalFeatures];
+    const percentOverlap = (area4Intersect/area4originalFeatures)*100;
+
+    return [
+      targetArea,
+      area4Intersect,
+      area4originalFeatures,
+      percentOverlap];
   }
 
 
