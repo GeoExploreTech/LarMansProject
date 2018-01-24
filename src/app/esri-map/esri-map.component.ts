@@ -78,13 +78,16 @@ export class EsriMapComponent implements OnInit {
   // Variable for storing inputed geometry
   private result4PolygonSearch: any; 
 
+  // Variable for storing chating records 
+  private eachFeatureRecord: any;
+
   isEsriMapOpens:boolean;
 
   constructor(
     private _esriMapModule:AppDataModelService,
     private router:Router,
-    private _projM: ProjectionModel
-    // private pdfReport: PdfReporter
+    private _projM: ProjectionModel,
+    private pdfReporter: PdfReporter
   ) {
   //  this._projM = new ProjectionModel();
 
@@ -575,9 +578,10 @@ export class EsriMapComponent implements OnInit {
       }
     });
     const outputPdf = this.dom.byId("output");
-    // const doc = this.pdfReport.contentDisplay();
+    this.pdfReporter.initWriterModule(this.eachFeatureRecord);
+    const doc = this.pdfReporter.writeChattingReport();
     // console.log(outputPdf);
-    // outputPdf.src = doc.output('datauristring');
+    outputPdf.src = doc.output('datauristring');
 
     $("#reporterId").dialog("open");
 
@@ -621,6 +625,7 @@ export class EsriMapComponent implements OnInit {
       {
 
         this.view.graphics.removeAll();
+        this.eachFeatureRecord = [];
 
         const resultID = [];
         const resultData = [];
@@ -692,9 +697,10 @@ export class EsriMapComponent implements OnInit {
         const targetPolygon = turf.polygon(this.buildPolygon(resultData)); // target polygon to search for
 
       
-        const eachFeatureRecord = []; // Storing record from search parcel query features
+        this.eachFeatureRecord = []; // Storing record from search parcel query features
 
-        layQuery.forEach(res =>{
+        let count = 1;
+        layQuery.forEach((res) =>{
           
           const getfea = this.extractInterceptArea(targetPolygon,res);
           const originalfeatures = turf.polygon(res.geometry.rings);
@@ -702,10 +708,13 @@ export class EsriMapComponent implements OnInit {
           if(getfea !== 'undefined'){
             const interceptsfeature = getfea;
             const areaAnalysis = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
-            console.log(areaAnalysis);
-            eachFeatureRecord.push(this.getParcelRecord_from_Database(res,1,areaAnalysis));
+  
+            this.eachFeatureRecord.push(this.getParcelRecord_from_Database(res,count,areaAnalysis));
+            count++;
           }
         });
+
+        console.log(this.eachFeatureRecord);
 
 
         
@@ -742,25 +751,7 @@ export class EsriMapComponent implements OnInit {
  * @param count
  */
   private getParcelRecord_from_Database(targetFeature,count,areaAnalysis){
-    const recordHeading = [
-      "FEATURE ID",
-      "ESTATE NAME",
-      "BLOCK ID",
-      "PLOT NUMBER",
-      "PLAN NUMBER",
-      "OVERLAP-FEATURE SIZE (Sq.m)",
-      "SEARCH-FEATURE SIZE (Sq.m)",
-      "PERCENTAGE OVERLAP",
-      "STREET ID",
-      "STREET NAME",
-      "LCDA",
-      "LGA",
-      "CITY ",
-      "REGION",
-      "COUNTRY",
-      "STATUS"
-    ];
-    const recordValues = [];
+
     const recordsResult = [];
 
     // Pointing QueryTask to Road Network URL feature service
@@ -780,8 +771,7 @@ export class EsriMapComponent implements OnInit {
     // promiseRejected() is called if the promise is rejected
     qTask.execute(params1)
       .then(response1=>{ // response1 is from the road network
-
-        console.log(response1);
+        const recordValues = [];
         // Pointing QueryTask to Road Network URL feature service
         const qTask2 = new this.QueryTask({
           url: this.lcdasURL
@@ -796,10 +786,9 @@ export class EsriMapComponent implements OnInit {
         qTask2.execute(params2)
         .then(response2 =>{
 
-          console.log(response2);
 
           // Gathering all records form all link database
-          recordValues.push(count);
+          recordValues.push("DETECTED PARCEL "+count);
           recordValues.push(targetFeature.attributes.ESTATE);
           recordValues.push(targetFeature.attributes.BLOCK_ID);
           recordValues.push(targetFeature.attributes.PLOT_NO);
@@ -815,19 +804,22 @@ export class EsriMapComponent implements OnInit {
           recordValues.push(response1.features[0].attributes.Region); //  "REGION"
           recordValues.push(response1.features[0].attributes.Country); //  "country"
           recordValues.push("STATUS"); //  "country"
-          
+        
 
+          for(let i=0; i<16; i++){
+            recordsResult.push(
+               recordValues[i]
+            );
+  
+          }
 
         });
+
+
       })
       .otherwise(this.promiseRejected);
 
-      for(let i=0; i<recordHeading.length; i++){
-        const heading = recordHeading[i];
-        recordsResult.push({
-          heading: recordValues[i]
-        });
-      }
+
 
       return recordsResult;
   }

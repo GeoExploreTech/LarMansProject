@@ -35,9 +35,9 @@ export class PdfReporter{
         this.doc = new jsPDF('p', 'mm','a4');
     }
 
-    public initWriterModule(dataArrayQuery: any, numOfFeatures: Number){
+    public initWriterModule(dataArrayQuery){
         this.dataArrayQuery = this.getChattingData(dataArrayQuery);
-        this.numOfFeatures = numOfFeatures;
+        this.numOfFeatures = dataArrayQuery.length;
     }
 
     // Content - shows how tables can be integrated with any other pdf content
@@ -49,15 +49,45 @@ export class PdfReporter{
         this.doc.text(' LARMANS PARCEL CHATTING GENERATED REPORT ', 20, 22);
 
         this.doc.setFontSize(12);
-        
-        for( let j=0; j<this.numOfFeatures; j++){
-            this.doc.autoTable(this.getDetailColumns().splice(1, 2), this.dataArrayQuery[j], {
+
+        if(this.numOfFeatures==1){
+            this.doc.autoTable(this.getDetailColumns(), this.dataArrayQuery[0], {
                 showHeader: 'never',
                 columnStyles: {
                     heading: {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
-                }
+                },
+                startY: 30,
+                theme: 'grid'
+    
             });
+        } else{
+            this.doc.autoTable(this.getDetailColumns(), this.dataArrayQuery[0], {
+                showHeader: 'never',
+                columnStyles: {
+                    heading: {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+                },
+                startY: 30,
+                theme: 'grid'
+    
+            });
+
+            for( let j=1; j<this.numOfFeatures; j++){
+                this.doc.autoTable(this.getDetailColumns(), this.dataArrayQuery[j], {
+                    showHeader: 'never',
+                    columnStyles: {
+                        heading: {fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold'}
+                    },
+                    startY: this.doc.autoTable.previous.finalY + 14,
+                    theme: 'grid'
+    
+                });
+            }
+
         }
+
+
+        
+
     
     
         return this.doc;
@@ -82,13 +112,14 @@ export class PdfReporter{
 
 
 
-    private getChattingData(dataArrayQuery:any[]){
+    private getChattingData(dataArrayQuery){
         const finalData = [];
 
         for(let i=0; i<dataArrayQuery.length; i++){
             const data = [];
             let count = 0;
             dataArrayQuery[i].forEach(item =>{
+                
                 data.push({
                     heading: this.dataId[count],
                     detail: item
