@@ -49,6 +49,7 @@ export class EsriMapComponent implements OnInit {
 
   private ESTATE:any;
   private PLOTS:any;
+  private ACQUISITION:any;
   private ENCROACHMENT:any;
   private BLOCKS:any;
   private ROAD_NETWORK:any;
@@ -57,14 +58,16 @@ export class EsriMapComponent implements OnInit {
   private lcdasURL:string;
   private plotURL: string;
   private estateURL: string;
+  private acquisionLayerURL:string;
 
 
-  private plotUrl:string;
+
   
 
   private resultsEstateLyr:any;
   private result4PlotQuery:any;
   private qTask4EstateLay :any;
+  private qTask4AcquisitionLay :any;
   private qTask4PlotLay: any;
 
 
@@ -184,6 +187,13 @@ export class EsriMapComponent implements OnInit {
         visible: false
       });
 
+      this.ACQUISITION = new FeatureLayer({
+        url: enterpriseDB,
+        layerId: 1,
+        outFields: ["*"],
+        visible: true
+      });
+
       this.ROAD_NETWORK = new FeatureLayer({
         url: enterpriseDB,
         layerId: 0,
@@ -195,7 +205,7 @@ export class EsriMapComponent implements OnInit {
       this.ENCROACHMENT = new FeatureLayer({
         url: "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LAND_RECORD_MANAGEMENT_SYS/FeatureServer/2",
         outFields: ["*"],
-        visible: true
+        visible: false
       });
 
       this.PLOTS = new FeatureLayer({
@@ -213,12 +223,20 @@ export class EsriMapComponent implements OnInit {
       // LCDAS feature URL
       this.lcdasURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/4?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
 
+      //Acquisition Layer URL
+      this.acquisionLayerURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/1?token=LhzFEtqXMQe2pM2CsM2VQWOMFbdCJ6dLqhtdaT2O2rttxcPhTYk10NoAg_a3-WuG1LikvaOqJ9RBbHoQJLbF2dQVsKOZlUPgKfvjXQvXGTs74qian4Y8CzkSr0viCQeAAh57G5dyyK5JuTvjuIAMODI5Aiw-OXH3bVjuILi8oekXOZPhUiGOBlPvOPYCYecfiCHqkvxgV-ramhPO8J24-okL_Ysnzu47v6GjTX3tOpVXDx9m3siXR31fZoM2-8Pb";
+
+      this.estateURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/3?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
+
       /*****************************************************************
       * Point QueryTask to URL of feature service
       *****************************************************************/
-      this.estateURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/3?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
       this.qTask4EstateLay = new QueryTask({
         url: this.estateURL
+      });
+
+      this.qTask4AcquisitionLay = new QueryTask({
+        url: this.acquisionLayerURL
       });
 
 
@@ -240,7 +258,7 @@ export class EsriMapComponent implements OnInit {
        *****************************************************************/
       this.map = new Map({
         basemap: "satellite",
-        layers: [this.resultsEstateLyr, this.result4PlotQuery, this.ESTATE, this.PLOTS, this.ENCROACHMENT, this.ROAD_NETWORK]
+        layers: [this.resultsEstateLyr, this.result4PlotQuery, this.ESTATE, this.PLOTS, this.ENCROACHMENT, this.ROAD_NETWORK, this.ACQUISITION]
       });
 
 
@@ -424,10 +442,12 @@ export class EsriMapComponent implements OnInit {
       return feature.attributes.NAME;
     });
     //console.log(values);
+    
     return values;
   }
 
   private createSideMenu(sidebar,title_tag) {
+    
     $('#mapId').css({
       "background-color": "black",
       "padding": "2px",
@@ -463,8 +483,9 @@ export class EsriMapComponent implements OnInit {
     };
     $( sidebar ).dialog({
       title: title_tag,
-      width: "190px",
+      width: Math.floor(window.innerWidth-(window.innerWidth*(85/100)))-10,
       draggable: false,
+      resizable: false,
       position: {
          my: 'left top+32',
          at: 'left top+30',
@@ -485,6 +506,8 @@ export class EsriMapComponent implements OnInit {
         });
       }
     });
+
+
 
 
   }
@@ -714,7 +737,7 @@ export class EsriMapComponent implements OnInit {
           }
         });
 
-        console.log(this.eachFeatureRecord);
+ 
 
 
         
@@ -793,8 +816,9 @@ export class EsriMapComponent implements OnInit {
           recordValues.push(targetFeature.attributes.BLOCK_ID);
           recordValues.push(targetFeature.attributes.PLOT_NO);
           recordValues.push(targetFeature.attributes.PLAN_NO);
-          recordValues.push(areaAnalysis[2]); // "OVERLAP-FEATURE SIZE (Sq.m)"
-          recordValues.push(areaAnalysis[1]); // "SEARCH-FEATURE SIZE (Sq.m)"
+          recordValues.push(areaAnalysis[2]); // "FEATURE SIZE (Sq.m)"
+          recordValues.push(areaAnalysis[0]); // "SEARCH-FEATURE SIZE (Sq.m)"
+          recordValues.push(areaAnalysis[1]); //  "OVERLAPPING SIZE (Sq.m)"
           recordValues.push(areaAnalysis[3]); // "PERCENTAGE OVERLAP"
           recordValues.push(response1.features[0].attributes.StreetID); // "STREET ID"
           recordValues.push(response1.features[0].attributes.Street); // "STREET NAME"
