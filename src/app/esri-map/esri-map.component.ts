@@ -74,7 +74,11 @@ export class EsriMapComponent implements OnInit {
   private infoDiv:any;
   private infoDivSelect:any;
 
+  private infoDiv2:any;
+  private infoDivSelect2:any;
+
   private estateLayName:any;
+  private acqusitionLayName:any;
 
   private query_params:any;
 
@@ -169,6 +173,9 @@ export class EsriMapComponent implements OnInit {
 
       this.infoDiv = document.getElementById('infoDiv');
       this.infoDivSelect = document.getElementById('infoDivSelect');
+
+      this.infoDiv2 = document.getElementById('infoDiv2');
+      this.infoDivSelect2 = document.getElementById('infoDivSelect2');
       
       
       // Create graphics layer and symbol to use for displaying the results from esate layer query
@@ -191,7 +198,7 @@ export class EsriMapComponent implements OnInit {
         url: enterpriseDB,
         layerId: 1,
         outFields: ["*"],
-        visible: true
+        visible: false
       });
 
       this.ROAD_NETWORK = new FeatureLayer({
@@ -275,11 +282,20 @@ export class EsriMapComponent implements OnInit {
 
       this.view.when(()=>{
         const query = this.ESTATE.createQuery();
+        const queryAcq = this.ACQUISITION.createQuery();
         const estateRes = this.ESTATE.queryFeatures(query);
+        const acquisitionRes = this.ACQUISITION.queryFeatures(queryAcq);
         estateRes.then(res=>{
-          const estateName = this.getValues(res);
+          const estateName = this.getNAME_Values(res);
           this.estateLayName = this.getUniqueValues(estateName);
-          this.generateLayerButton(this.estateLayName);
+          this.generateLayerButton(this.estateLayName,this.infoDivSelect,"NAME",this.resultsEstateLyr,this.qTask4EstateLay);
+        });
+
+        acquisitionRes.then(res=>{
+          const acqusitionName = this.getLAYER_Values(res);
+          this.acqusitionLayName = this.getUniqueValues(acqusitionName);
+          
+          this.generateLayerButton(this.acqusitionLayName,this.infoDivSelect2,"LAYER",this.resultsEstateLyr,this.qTask4AcquisitionLay);
         });
 
 
@@ -320,7 +336,7 @@ export class EsriMapComponent implements OnInit {
     return tem;
   }
 
-  generateLayerButton(values){
+  private generateLayerButton(values, appendHtmlElement, serachField,resultsFeatureLyr,qTask4FeatureLay){
     let docFrag = document.createDocumentFragment();
     values.forEach(res=>{
       const card = this.template(res);
@@ -328,22 +344,22 @@ export class EsriMapComponent implements OnInit {
       elem.innerHTML = card;
       this.on(elem, "click", ({target})=>{
         // console.log(target.value);
-        this.doFieldQuery("NAME",target.value,this.resultsEstateLyr);
+        this.doFieldQuery(serachField,target.value,resultsFeatureLyr,qTask4FeatureLay);
 
       });
       docFrag.appendChild(elem);
 
     });
     // Append the completed list to the page.
-    this.infoDivSelect.appendChild(docFrag);
+    appendHtmlElement.appendChild(docFrag);
     docFrag = undefined;
   }
 
 
 
-  openLayersDialog(){
-    $("#infoDiv").dialog({
-      title: "Estate Layers",
+  openLayersDialog(titleName, tagId){
+    $(tagId).dialog({
+      title: titleName,
       autoOpen: false,
       modal: false,
       icon: "ui-icon-close",
@@ -357,7 +373,7 @@ export class EsriMapComponent implements OnInit {
       },
       collision: "fit flip"
     });
-    $("#infoDiv").dialog("open");
+    $(tagId).dialog("open");
     
   }
 
@@ -372,7 +388,7 @@ export class EsriMapComponent implements OnInit {
  * @param value 
  * @param graphicsLayer 
  */
-  private doFieldQuery(field,value,graphicsLayer) {
+  private doFieldQuery(field,value,graphicsLayer,qTask4Specifyeature) {
     // Clear the results from a previous query
     graphicsLayer.removeAll();
     /*********************************************
@@ -391,11 +407,13 @@ export class EsriMapComponent implements OnInit {
      **********************************************/
     this.query_params.where = `${field} = \'${value}\'`;
     console.log(this.query_params.where);
-    this.qTask4EstateLay.execute(this.query_params)
+    console.log(qTask4Specifyeature);
+    qTask4Specifyeature.execute(this.query_params)
     .then(res=>{
       const layQuery = this.polygonLayFromFeatureLay(res, true, [237, 187, 153, 0.8]);
-      graphicsLayer.addMany(layQuery);
-      this.view.goTo(layQuery[0].geometry.extent);
+      console.log(layQuery);
+      // graphicsLayer.addMany(layQuery);
+      // this.view.goTo(layQuery[0].geometry.extent);
 
       // this._projM.transformProj(['EPSG:26331'], 'inverse', res.features[0].geometry.rings[0]);
     })
@@ -436,7 +454,7 @@ export class EsriMapComponent implements OnInit {
  * Field.
  * @param response 
  */
-  private getValues(response) {
+  private getNAME_Values(response) {
     const features = response.features;
     const values = features.map(function(feature) {
       return feature.attributes.NAME;
@@ -445,6 +463,21 @@ export class EsriMapComponent implements OnInit {
     
     return values;
   }
+
+  /**
+ * Method to get all the Value in a particular
+ * Field.
+ * @param response 
+ */
+private getLAYER_Values(response) {
+  const features = response.features;
+  const values = features.map(function(feature) {
+    return feature.attributes.LAYER;
+  });
+  //console.log(values);
+  
+  return values;
+}
 
   private createSideMenu(sidebar,title_tag) {
     

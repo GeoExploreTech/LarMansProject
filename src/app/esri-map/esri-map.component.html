@@ -94,13 +94,13 @@
 
                     <div class="ui inverted divider"></div>
                     <div>
-                        <button class="mini ui primary button" id="load-EstateLayer" (click)="openLayersDialog()">
+                        <button class="mini ui primary button" id="load-EstateLayer" (click)="openLayersDialog('Estate Layers','#infoDiv')">
                             Schemes
                         </button>
                     </div>
                     <div class="ui inverted divider"></div>
                     <div>
-                        <button class="mini ui primary button" id="acquisiton_btn">
+                        <button class="mini ui primary button" id="acquisiton_btn" (click)="openLayersDialog('Acquisition Layers','#infoDiv2')">
                             Acquisition
                         </button>
                     </div>
@@ -137,13 +137,29 @@
 
     </div>
 
-    <!-- WIDGET FOR FEATURE LAYER DISPLAY -->
+    <!-- WIDGET FOR ESTATE FEATURE LAYER DISPLAY -->
     <div class="ui form sidebar radioLeft">
         <div class=" radioLeft" id="infoDiv">
             <div class="ui floating dropdown labeled search icon button">
                 <i class="world icon"></i>
-                <span class="text">Select Estate Layer</span>
+                <span class="text">Select Feature Layer</span>
                 <div class="menu" id="infoDivSelect">
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <!-- WIDGET FOR ACQUISITION FEATURE LAYER DISPLAY -->
+    <div class="ui form sidebar radioLeft">
+        <div class=" radioLeft" id="infoDiv2">
+            <div class="ui floating dropdown labeled search icon button">
+                <i class="world icon"></i>
+                <span class="text">Select Feature Layer</span>
+                <div class="menu" id="infoDivSelect2">
 
                 </div>
             </div>
