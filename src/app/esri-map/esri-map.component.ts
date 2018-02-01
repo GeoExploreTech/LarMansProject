@@ -1,5 +1,5 @@
 import { PdfReporter } from './../modelAlgorithm/pdfReporter';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AppDataModelService } from '../app-data-model.service';
 import { Router} from '@angular/router';
 
@@ -22,10 +22,9 @@ declare let turf:any;
 export class EsriMapComponent implements OnInit {
 
 
-
-    /**
+  /**
    * DECLARING ESRI MODULES HERE
-   */
+  */
   private map:any;
   private view: any;
   private Layer:any;
@@ -88,7 +87,9 @@ export class EsriMapComponent implements OnInit {
   // Variable for storing chating records 
   private eachFeatureRecord: any;
 
-  isEsriMapOpens:boolean;
+  private isEsriMapOpens:boolean;
+
+  private chartingCategory: Number;
 
   constructor(
     private _esriMapModule:AppDataModelService,
@@ -97,6 +98,8 @@ export class EsriMapComponent implements OnInit {
     private pdfReporter: PdfReporter
   ) {
   //  this._projM = new ProjectionModel();
+
+    
 
    }
 
@@ -411,9 +414,15 @@ export class EsriMapComponent implements OnInit {
     qTask4Specifyeature.execute(this.query_params)
     .then(res=>{
       const layQuery = this.polygonLayFromFeatureLay(res, true, [237, 187, 153, 0.8]);
-      console.log(layQuery);
-      // graphicsLayer.addMany(layQuery);
-      // this.view.goTo(layQuery[0].geometry.extent);
+      
+      graphicsLayer.addMany(layQuery);
+      
+      if(layQuery.length===1){
+        this.view.goTo(layQuery[0].geometry.extent);
+      } else{
+        this.view.goTo(layQuery[0].geometry.extent);
+      }
+      // 
 
       // this._projM.transformProj(['EPSG:26331'], 'inverse', res.features[0].geometry.rings[0]);
     })
@@ -549,6 +558,7 @@ private getLAYER_Values(response) {
     const polygonGraphic = [];
     feature.features.forEach(item=>{
       // console.log(item);
+      console.log(Object.entries(item.attributes));
       let ring;
       if (toTransform) {
         ring = this._projM.transformArray2_Minna31(item.geometry.rings[0]);
@@ -556,6 +566,7 @@ private getLAYER_Values(response) {
         ring = item.geometry.rings[0];
       }
 
+      
       // Add the geometry and symbol to a new graphic
       polygonGraphic.push(
         new this.Graphic({
@@ -584,9 +595,11 @@ private getLAYER_Values(response) {
     return polygonGraphic;
   }
 
+  
 
-  private openPolygonSearchDialog(){
 
+  private openPolygonSearchDialog(status:Number){
+    
     $("#polygonSearchTable").dialog({
       title: "Parcel Charting",
       autoOpen: false,
@@ -608,11 +621,14 @@ private getLAYER_Values(response) {
       }
     });
 
+    this.chartingCategory = status;
+    
     this.polygonSearchTableModel();
 
   }
 
   private displayReport(){
+    
     $("#reporterId").dialog({
       title: "Parcel Charting Report",
       autoOpen: false,
@@ -634,7 +650,12 @@ private getLAYER_Values(response) {
       }
     });
     const outputPdf = this.dom.byId("output");
-    this.pdfReporter.initWriterModule(this.eachFeatureRecord);
+    if(this.chartingCategory===0){
+      this.pdfReporter.initWriterModule(this.eachFeatureRecord, this.pdfReporter.dataId);
+    } else{
+      this.pdfReporter.initWriterModule(this.eachFeatureRecord, this.pdfReporter.acqusitionDataId);
+    }
+    
     const doc = this.pdfReporter.writeChattingReport();
     // console.log(outputPdf);
     outputPdf.src = doc.output('datauristring');
@@ -739,43 +760,83 @@ private getLAYER_Values(response) {
         outFields: ["*"]
       });
 
-      this.qTask4PlotLay = new this.QueryTask({
-        url: this.plotURL
-      });
-
-      this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
-
-        const layQuery = this.polygonLayFromFeatureLay(result, false, [58, 93, 209, 0.7]);
-        this.resultsEstateLyr.removeAll()
-        this.resultsEstateLyr.addMany(layQuery);
-        this.view.goTo(layQuery[0].geometry.extent);
-
-        const targetPolygon = turf.polygon(this.buildPolygon(resultData)); // target polygon to search for
-
-      
-        this.eachFeatureRecord = []; // Storing record from search parcel query features
-
-        let count = 1;
-        layQuery.forEach((res) =>{
-          
-          const getfea = this.extractInterceptArea(targetPolygon,res);
-          const originalfeatures = turf.polygon(res.geometry.rings);
-
-          if(getfea !== 'undefined'){
-            const interceptsfeature = getfea;
-            const areaAnalysis = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
-  
-            this.eachFeatureRecord.push(this.getParcelRecord_from_Database(res,count,areaAnalysis));
-            count++;
-          }
+      if(this.chartingCategory===0){
+        this.qTask4PlotLay = new this.QueryTask({
+          url: this.plotURL
         });
 
- 
+        this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
 
-
+          const layQuery = this.polygonLayFromFeatureLay(result, false, [58, 93, 209, 0.7]);
+          this.resultsEstateLyr.removeAll()
+          this.resultsEstateLyr.addMany(layQuery);
+          this.view.goTo(layQuery[0].geometry.extent);
+  
+          const targetPolygon = turf.polygon(this.buildPolygon(resultData)); // target polygon to search for
+  
         
+          this.eachFeatureRecord = []; // Storing record from search parcel query features
+  
+          let count = 1;
+          layQuery.forEach((res) =>{
+            
+            const getfea = this.extractInterceptArea(targetPolygon,res);
+            const originalfeatures = turf.polygon(res.geometry.rings);
+  
+            if(getfea !== 'undefined'){
+              const interceptsfeature = getfea;
+              const areaAnalysis = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
+    
+              this.eachFeatureRecord.push(this.getParcelRecord_from_Database(res,count,areaAnalysis));
+              count++;
+            }
+          });
+          
+        }
+        
+      ); // End of query task for land record polygon search
+
+      // Query procedure for acqusition charting.
+      } else{
+        this.qTask4PlotLay = new this.QueryTask({
+          url: this.acquisionLayerURL
+        });
+
+        this.qTask4PlotLay.execute(this.query_params4plot).then(result => {
+
+          const layQuery = this.polygonLayFromFeatureLay(result, false, [58, 93, 209, 0.7]);
+          this.resultsEstateLyr.removeAll()
+          this.resultsEstateLyr.addMany(layQuery);
+          this.view.goTo(layQuery[0].geometry.extent);
+  
+          const targetPolygon = turf.polygon(this.buildPolygon(resultData)); // target polygon to search for
+  
+        
+          this.eachFeatureRecord = []; // Storing record from search parcel query features
+  
+          let count = 1;
+          layQuery.forEach((res) =>{
+            
+            const getfea = this.extractInterceptArea(targetPolygon,res);
+            const originalfeatures = turf.polygon(res.geometry.rings);
+  
+            if(getfea !== 'undefined'){
+              const interceptsfeature = getfea;
+              const areaAnalysis = this.overlapAnalysis(targetPolygon,interceptsfeature,originalfeatures);
+    
+              this.eachFeatureRecord.push(this.getAcqusitionRecord_from_Database(res,count,areaAnalysis));
+              count++;
+            }
+          });
+          
+        }
+        
+      ); // End of query task for land record polygon search
       }
-    ); // End of query task for polygon search
+
+
+
+
 
 
       }
@@ -805,6 +866,7 @@ private getLAYER_Values(response) {
  * Method for get all record related to the target feature
  * @param targetFeature : target feature form previous query
  * @param count
+ * @param areaAnalysis
  */
   private getParcelRecord_from_Database(targetFeature,count,areaAnalysis){
 
@@ -880,6 +942,101 @@ private getLAYER_Values(response) {
 
       return recordsResult;
   }
+
+
+
+/**
+ * Method for get all record related to the target feature
+ * from Acqusition Layer
+ * @param targetFeature : target feature form previous query
+ * @param count
+ * @param areaAnalysis
+ */
+private getAcqusitionRecord_from_Database(targetFeature,count,areaAnalysis){
+
+  const recordsResult = [];
+
+  recordsResult.push("ACQUSITION LAYER : "+count);
+  recordsResult.push(targetFeature.attributes.REF_NAME);
+  recordsResult.push(targetFeature.attributes.LAYER);
+  recordsResult.push(targetFeature.attributes.TYPE);
+  recordsResult.push(targetFeature.attributes.GAZETTE_NO);
+  recordsResult.push(targetFeature.attributes.PUB_DATE);
+  recordsResult.push(areaAnalysis[2]); // "FEATURE SIZE (Sq.m)"
+  recordsResult.push(areaAnalysis[0]); // "SEARCH-FEATURE SIZE (Sq.m)"
+  recordsResult.push(areaAnalysis[1]); //  "OVERLAPPING SIZE (Sq.m)"
+  recordsResult.push(areaAnalysis[3]); // "PERCENTAGE OVERLAP"
+  recordsResult.push("STATUS"); //  "country"
+
+
+  // // Pointing QueryTask to Road Network URL feature service
+  // const qTask = new this.QueryTask({
+  //   url: this.roadNetworkURL
+  // });
+
+  // const params1 = new this.Query({
+  //   returnGeometry: true,
+  //   outFields: ["*"]
+  // });
+
+  // const streetId:string = targetFeature.attributes.StreetID;
+  // params1.where =  "StreetID = '" + streetId + "'";
+  
+
+  // qTask.execute(params1)
+  //   .then(response1=>{ // response1 is from the road network
+  //     const recordValues = [];
+  //     // Pointing QueryTask to Road Network URL feature service
+  //     const qTask2 = new this.QueryTask({
+  //       url: this.lcdasURL
+  //     });
+    
+  //     const params2 = new this.Query({
+  //       returnGeometry: true,
+  //       outFields: ["*"]
+  //     });
+
+  //     params2.geometry = response1.features[0].geometry;
+  //     qTask2.execute(params2)
+  //     .then(response2 =>{
+
+
+  //       // Gathering all records form all link database
+  //       recordValues.push("DETECTED PARCEL "+count);
+  //       recordValues.push(targetFeature.attributes.ESTATE);
+  //       recordValues.push(targetFeature.attributes.BLOCK_ID);
+  //       recordValues.push(targetFeature.attributes.PLOT_NO);
+  //       recordValues.push(targetFeature.attributes.PLAN_NO);
+  //       recordValues.push(areaAnalysis[2]); // "FEATURE SIZE (Sq.m)"
+  //       recordValues.push(areaAnalysis[0]); // "SEARCH-FEATURE SIZE (Sq.m)"
+  //       recordValues.push(areaAnalysis[1]); //  "OVERLAPPING SIZE (Sq.m)"
+  //       recordValues.push(areaAnalysis[3]); // "PERCENTAGE OVERLAP"
+  //       recordValues.push(response1.features[0].attributes.StreetID); // "STREET ID"
+  //       recordValues.push(response1.features[0].attributes.Street); // "STREET NAME"
+  //       recordValues.push(response2.features[0].attributes.LCDA); // "LCDA"
+  //       recordValues.push(response2.features[0].attributes.LGA); // "LGA"
+  //       recordValues.push(response1.features[0].attributes.City); // "CITY "
+  //       recordValues.push(response1.features[0].attributes.Region); //  "REGION"
+  //       recordValues.push(response1.features[0].attributes.Country); //  "country"
+  //       recordValues.push("STATUS"); //  "country"
+      
+
+  //       for(let i=0; i<16; i++){
+  //         recordsResult.push(
+  //            recordValues[i]
+  //         );
+
+  //       }
+
+  //     });
+
+
+  //   })
+  //   .otherwise(this.promiseRejected);
+
+    return recordsResult;
+}
+
 
   /**
    * Module for Area analysis, percentage overlap

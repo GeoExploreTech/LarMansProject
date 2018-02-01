@@ -8,7 +8,7 @@ declare var jsPDF: any; // Important
 
 export class PdfReporter{
     private doc:any;
-    private dataId: string[] = [
+    public dataId: string[] = [
         "FEATURE ID",
         "ESTATE NAME",
         "BLOCK ID",
@@ -28,6 +28,20 @@ export class PdfReporter{
         "STATUS"
     ];
 
+    public acqusitionDataId: string[] = [
+        "FEATURE ID",
+        "ACQUSITION REFERENCE NAME",
+        "ACQUSITION NAME",
+        "ACQUSITION TYPE",
+        "GAZETTE NUMBER ",
+        "PUBLISH DATE",
+        "FEATURE SIZE (Sq.m)",
+        "SEARCH-FEATURE SIZE (Sq.m)",
+        "OVERLAPPING SIZE (Sq.m)",
+        "PERCENTAGE OVERLAP",
+        "STATUS"
+    ];
+
     private dataArrayQuery: any;
     private numOfFeatures: Number;
 
@@ -36,8 +50,8 @@ export class PdfReporter{
         this.doc = new jsPDF('p', 'mm','a4');
     }
 
-    public initWriterModule(dataArrayQuery){
-        this.dataArrayQuery = this.getChattingData(dataArrayQuery);
+    public initWriterModule(dataArrayQuery, dataId){
+        this.dataArrayQuery = this.getChattingData(dataArrayQuery, dataId);
         this.numOfFeatures = dataArrayQuery.length;
     }
 
@@ -113,7 +127,7 @@ export class PdfReporter{
 
 
 
-    private getChattingData(dataArrayQuery){
+    private getChattingData(dataArrayQuery,dataId){
         const finalData = [];
 
         for(let i=0; i<dataArrayQuery.length; i++){
@@ -122,7 +136,7 @@ export class PdfReporter{
             dataArrayQuery[i].forEach(item =>{
                 
                 data.push({
-                    heading: this.dataId[count],
+                    heading: dataId[count],
                     detail: item
                 });
     
