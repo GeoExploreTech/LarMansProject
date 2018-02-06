@@ -189,19 +189,19 @@ export class EsriMapComponent implements OnInit {
 
 
       // URL to feature service containing the enterprise database model
-      const enterpriseDB = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer"
+      const enterpriseDB = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/MAP_SERVICE_DATAMODEL/FeatureServer"
  
 
       this.ESTATE = new FeatureLayer({
         url: enterpriseDB,
-        layerId: 3,
+        layerId: 1,
         outFields: ["*"],
         visible: false
       });
 
       this.ACQUISITION = new FeatureLayer({
         url: enterpriseDB,
-        layerId: 1,
+        layerId: 2,
         outFields: ["*"],
         visible: false
       });
@@ -222,23 +222,23 @@ export class EsriMapComponent implements OnInit {
 
       this.PLOTS = new FeatureLayer({
         url: enterpriseDB,
-        layerId: 2,
+        layerId: 4,
         outFields: ["*"],
         //renderer: plotRenderer,
         visible: false
       });
 
       // Plot URL
-      this.plotURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/2?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
+      this.plotURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/MAP_SERVICE_DATAMODEL/FeatureServer/4?token=r5QpN8fxUEDqTCoEDTZVyZ7rnsZabSTbJtEuWzeBE7Zo7eTBEsFQsuc5KH_92HTkTwQu5D7-l2j1d6BiNju3agDYKxNtTTrol0KxfBqAQYfoG7mC9g3hdUnDH4u4p3hTvWU6EaR0zcwEjSYjShllKGHiirHWwsPWBLhVzWT0Gok999fBMxSPD-nxjiTqLCn3FY1WifKG_6Xx1BxUw7oMcA8FaB0Fb_v0nmMTXM5QvyJmK1KI9qa4M3XYEelryq18";
       // Road Network URL
-      this.roadNetworkURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/0?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
+      this.roadNetworkURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/MAP_SERVICE_DATAMODEL/FeatureServer/0?token=r5QpN8fxUEDqTCoEDTZVyZ7rnsZabSTbJtEuWzeBE7Zo7eTBEsFQsuc5KH_92HTkTwQu5D7-l2j1d6BiNju3agDYKxNtTTrol0KxfBqAQYfoG7mC9g3hdUnDH4u4p3hTvWU6EaR0zcwEjSYjShllKGHiirHWwsPWBLhVzWT0Gok999fBMxSPD-nxjiTqLCn3FY1WifKG_6Xx1BxUw7oMcA8FaB0Fb_v0nmMTXM5QvyJmK1KI9qa4M3XYEelryq18";
       // LCDAS feature URL
-      this.lcdasURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/4?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
+      this.lcdasURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/MAP_SERVICE_DATAMODEL/FeatureServer/3?token=r5QpN8fxUEDqTCoEDTZVyZ7rnsZabSTbJtEuWzeBE7Zo7eTBEsFQsuc5KH_92HTkTwQu5D7-l2j1d6BiNju3agDYKxNtTTrol0KxfBqAQYfoG7mC9g3hdUnDH4u4p3hTvWU6EaR0zcwEjSYjShllKGHiirHWwsPWBLhVzWT0Gok999fBMxSPD-nxjiTqLCn3FY1WifKG_6Xx1BxUw7oMcA8FaB0Fb_v0nmMTXM5QvyJmK1KI9qa4M3XYEelryq18";
 
       //Acquisition Layer URL
-      this.acquisionLayerURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/1?token=LhzFEtqXMQe2pM2CsM2VQWOMFbdCJ6dLqhtdaT2O2rttxcPhTYk10NoAg_a3-WuG1LikvaOqJ9RBbHoQJLbF2dQVsKOZlUPgKfvjXQvXGTs74qian4Y8CzkSr0viCQeAAh57G5dyyK5JuTvjuIAMODI5Aiw-OXH3bVjuILi8oekXOZPhUiGOBlPvOPYCYecfiCHqkvxgV-ramhPO8J24-okL_Ysnzu47v6GjTX3tOpVXDx9m3siXR31fZoM2-8Pb";
+      this.acquisionLayerURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/MAP_SERVICE_DATAMODEL/FeatureServer/2?token=r5QpN8fxUEDqTCoEDTZVyZ7rnsZabSTbJtEuWzeBE7Zo7eTBEsFQsuc5KH_92HTkTwQu5D7-l2j1d6BiNju3agDYKxNtTTrol0KxfBqAQYfoG7mC9g3hdUnDH4u4p3hTvWU6EaR0zcwEjSYjShllKGHiirHWwsPWBLhVzWT0Gok999fBMxSPD-nxjiTqLCn3FY1WifKG_6Xx1BxUw7oMcA8FaB0Fb_v0nmMTXM5QvyJmK1KI9qa4M3XYEelryq18";
 
-      this.estateURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/LS_ENTERPRISE_DATAMODEL/FeatureServer/3?token=ZBwrEAHwNlx3XmuWCU0Rl7XhHbBh3LaHS9yshvXwajbXYPIevQv_Sb-1JN0a6B50P4oxbKg0MFBGogWyqODCz7EjA9zBxni1AJS0UJX8FSlfvS5uMab4da_tmouYvNNH-nrDF0xxECvoIRNJyI-r0Zi1TvQidcuCXzaqioh7KnLdNQgwnS7sur9O9UzO8nzDKo0TsmhCuRNfpU3ebA8G0-V2ZD8uh7q4jmkdHKyocvEulbr8BBjhwkEycZItt49x";
+      this.estateURL = "https://services8.arcgis.com/RqA65gdwUsw4IGhD/arcgis/rest/services/MAP_SERVICE_DATAMODEL/FeatureServer/1?token=r5QpN8fxUEDqTCoEDTZVyZ7rnsZabSTbJtEuWzeBE7Zo7eTBEsFQsuc5KH_92HTkTwQu5D7-l2j1d6BiNju3agDYKxNtTTrol0KxfBqAQYfoG7mC9g3hdUnDH4u4p3hTvWU6EaR0zcwEjSYjShllKGHiirHWwsPWBLhVzWT0Gok999fBMxSPD-nxjiTqLCn3FY1WifKG_6Xx1BxUw7oMcA8FaB0Fb_v0nmMTXM5QvyJmK1KI9qa4M3XYEelryq18";
 
       /*****************************************************************
       * Point QueryTask to URL of feature service
@@ -300,7 +300,7 @@ export class EsriMapComponent implements OnInit {
           const acqusitionName = this.getLAYER_Values(res);
           this.acqusitionLayName = this.getUniqueValues(acqusitionName);
           
-          this.generateLayerButton(this.acqusitionLayName,this.infoDivSelect2,"LAYER",this.resultsEstateLyr,this.qTask4AcquisitionLay);
+          this.generateLayerButton(this.acqusitionLayName,this.infoDivSelect2,"TYPE",this.resultsEstateLyr,this.qTask4AcquisitionLay);
         });
 
 
@@ -484,7 +484,7 @@ export class EsriMapComponent implements OnInit {
 private getLAYER_Values(response) {
   const features = response.features;
   const values = features.map(function(feature) {
-    return feature.attributes.LAYER;
+    return feature.attributes.TYPE;
   });
   //console.log(values);
   
