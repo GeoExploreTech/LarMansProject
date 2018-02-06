@@ -97,13 +97,15 @@ export class EsriMapComponent implements OnInit {
     private _projM: ProjectionModel,
     private pdfReporter: PdfReporter
   ) {
-  //  this._projM = new ProjectionModel();
+      this._projM = new ProjectionModel();
 
     
 
    }
 
   ngOnInit() {
+
+   
     this._esriMapModule.isEsriMapOpen.subscribe(res=> this.isEsriMapOpens = res);
     $('.ui.floating.dropdown')
       .dropdown();
@@ -341,6 +343,7 @@ export class EsriMapComponent implements OnInit {
 
   private generateLayerButton(values, appendHtmlElement, serachField,resultsFeatureLyr,qTask4FeatureLay){
     let docFrag = document.createDocumentFragment();
+    this._projM.buildTest();
     values.forEach(res=>{
       const card = this.template(res);
       const elem = document.createElement("div");
